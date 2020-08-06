@@ -1,0 +1,85 @@
+---
+title: 如何用hexo搭建简易的个人博客
+date: 2020-07-30 19:28:21
+tags:
+---
+## 有关如何用hexo搭建简易个人博客的一些声明
+
+   本文章的教学范围仅限于搭建简易的个人博客，也是我的第一篇个人博客，是参考 codesheep 在B站上的视频的程序一步步做出来的，羊哥的视频是真正无坑版本的，想要深入了解的读者可以去仔细研读。本文章只是对羊哥视频的总结和复盘，仅供仍然存在困难的读者一些参考。作者安装的Windows 64位，和羊哥的Mac版本略有不同。
+
+## 搭建步骤
+
+   1. 安装node.js，下载网址：nodejs.org。
+
+   2. Windows需要安装git版本控制工具，bai du git下载就能找到。如果觉得下载太慢或无法打开页面，分享我的百度网盘链接：https://pan.baidu.com/s/1SnmSX1YhbEf65Sk2TrfEVA 提取码 dcf8，Windows64位2.27版本的。
+
+   3. Windows下载后安装git，在网上搜索安装教程即可，应该是要和node工具在一个目录下，因为在不同目录下的尝试没成功。
+
+   4. 打开git bash。
+
+   5. 依次输入以下命令
+
+   npm install -g cnpm --rigistry=https://registry.npm.taobao.org 先借助cnpm安装
+   cnpm install -g hexo-cli 安装hexo博客框架
+   hexo -v 可以查看当前安装的hexo版本
+
+   mkdir blog 在当前路径建立一个博客目录
+   cd blog/ 进入建立的目录
+
+   hexo init 初始化一个博客
+
+   hexo start 启动博客
+   会生成一个本地网址，打开就能看到hexo创建的默认博客。
+
+   6. 新建一篇文章
+   hexo new "我的第一篇博客"，会生成该文章文件和目录。进入这个目录下，就会看到生成的文件了。之后你可以用vi编辑器写文章内容了，支持Markdown格式。
+   
+   7. 退回到blog目录下，生成编辑文章：hexo g
+
+   8. 输入 hexo s启动博客，即可看到新添加的博文。
+
+## 博客的简单布置
+
+### 博客配置到github
+   配置博客到github，这样就不必始终在本地端口访问了，可以在生成自己的博客网址了。
+   1. 登陆github，右上角+号，New repository。
+   
+   2. 命名：自己的昵称.github.io，这个地址会作为博客的网址。
+   
+   3. 命令行，博客的blog路径下输入 cnpm install --save hexo-deployer-git，安装一个插件。
+
+   4. 安装完成后，ls 打开列表，修改_config.yml文件：vim _config.yml，打开后跳到文件末尾，最后的type: 后面修改如下：
+   
+   type: git
+   repo: (这里复制刚才新建的仓库地址)
+   branch: master
+
+   保存退出。
+
+   5. 部署到远端：hexo d ，根据提示输入账号和密码。
+
+   6. 刷新github仓库就可以看到更新的内容，此时的仓库名字可以直接在浏览器访问了。
+
+
+### 博客的主题
+   更换博客的主题，让你的博客看起来更美观。
+
+   网址：github.com/litten/hexo-theme-yilia
+
+   1. 本地git端下载主题： blog 目录下，git clone https://github.com/litten/hexo-theme-yilia.git themes/yilla 
+
+   将该网址下的主题复制到本地的themes/yilia目录下。
+
+   2. 进入theme目录下，ls可以看到刚下载的主题。
+
+   3. 配置到自己的博客：blog目录下再次配置 _config.yml文件：
+
+   找到Theme，将原来的主题换成yilia.
+
+   4. 回去blog目录hexo g, hexo s即可在本地端口查看到自己的主题。当然你也可以再立刻 hexo d，和刚才一样。把新的主题格式推到github远端上去。
+
+## 更多
+   
+   作者后续会进行相应的更新，包括插入图片、超链接、配置更美观的界面等。请关注作者的其他文章。
+
+
