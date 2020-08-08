@@ -171,7 +171,7 @@
     
     <span class="post-meta mr-2">
       <i class="iconfont icon-chart"></i>
-      1.4k 字
+      1.2k 字
     </span>
   
 
@@ -181,7 +181,7 @@
       <i class="iconfont icon-clock-fill"></i>
       
       
-      15
+      13
        分钟
     </span>
   
@@ -214,8 +214,8 @@
             <h1 style="display: none">如何用hexo搭建简易的个人博客</h1>
             
             <div class="markdown-body" id="post-body">
-              <h2 id="有关如何用hexo搭建简易个人博客的一些声明"><a href="#有关如何用hexo搭建简易个人博客的一些声明" class="headerlink" title="有关如何用hexo搭建简易个人博客的一些声明"></a>有关如何用hexo搭建简易个人博客的一些声明</h2><p>   本文章的教学范围仅限于搭建简易的个人博客，也是我的第一篇个人博客，是参考 codesheep 在B站上的视频的程序一步步做出来的，羊哥的视频是真正无坑版本的，想要深入了解的读者可以去仔细研读。本文章只是对羊哥视频的总结和复盘，仅供仍然存在困难的读者一些参考。作者安装的Windows 64位，和羊哥的Mac版本略有不同。</p>
-<h2 id="搭建步骤"><a href="#搭建步骤" class="headerlink" title="搭建步骤"></a>搭建步骤</h2><ol>
+              <h2 id="有关如何用hexo搭建简易个人博客的一些声明"><a href="#有关如何用hexo搭建简易个人博客的一些声明" class="headerlink" title="有关如何用hexo搭建简易个人博客的一些声明"></a>有关如何用hexo搭建简易个人博客的一些声明</h2><p>   本文章的教学范围仅限于搭建简易的个人博客，是参考 codesheep 在B站上的视频的程序一步步做出来的，想要深入了解的读者可以去仔细研读。本文章只是对羊哥视频的复盘，仅供仍然存在困难的读者一些参考。作者安装的Windows 64位，和羊哥的Mac版本略有不同。</p>
+<h3 id="概要：搭建hexo博客；-将博客部署到github、码云、coding平台的方法。"><a href="#概要：搭建hexo博客；-将博客部署到github、码云、coding平台的方法。" class="headerlink" title="概要：搭建hexo博客； 将博客部署到github、码云、coding平台的方法。"></a>概要：搭建hexo博客； 将博客部署到github、码云、coding平台的方法。</h3><h2 id="搭建步骤"><a href="#搭建步骤" class="headerlink" title="搭建步骤"></a>搭建步骤</h2><ol>
 <li><p>安装node.js，下载网址：nodejs.org。</p>
 </li>
 <li><p>Windows需要安装git版本控制工具，bai du git下载就能找到。如果觉得下载太慢或无法打开页面，分享我的百度网盘链接：<a target="_blank" rel="noopener" href="https://pan.baidu.com/s/1SnmSX1YhbEf65Sk2TrfEVA">https://pan.baidu.com/s/1SnmSX1YhbEf65Sk2TrfEVA</a> 提取码 dcf8，Windows64位2.27版本的。</p>
@@ -290,22 +290,9 @@
 
 （2）修改 _config.yml文件，repo配置更改示例如下：</code></pre>
 <p><img src="/img/posts/%E5%A6%82%E4%BD%95%E7%94%A8hexo%E6%90%AD%E5%BB%BA%E7%AE%80%E6%98%93%E7%9A%84%E4%B8%AA%E4%BA%BA%E5%8D%9A%E5%AE%A2/repo.png" srcset="/img/loading.gif"></p>
-<pre><code>（3）hexo clean + hexo g + hexo d 就可以同时推送到多个平台上。</code></pre>
-<h3 id="博客的主题"><a href="#博客的主题" class="headerlink" title="博客的主题"></a>博客的主题</h3><p>   更换博客的主题，让你的博客看起来更美观。可以借用hexo提供的模板，在官网hexo.io上可以找到更多模板。</p>
-<p>   以yilia为例：</p>
-<p>   网址：github.com/litten/hexo-theme-yilia</p>
-<ol>
-<li><p>本地git端下载主题： blog 目录下，git clone <a target="_blank" rel="noopener" href="https://github.com/litten/hexo-theme-yilia.git">https://github.com/litten/hexo-theme-yilia.git</a> themes/yilla </p>
-<p>将该网址下的主题复制到本地的themes/yilia目录下。如果和github的链接太慢，可以去下载压缩包，手动解压复制到当前的文件下。</p>
-</li>
-<li><p>进入theme目录下，ls可以看到刚下载的主题。</p>
-</li>
-<li><p>配置到自己的博客：blog目录下再次配置 _config.yml文件：</p>
-<p>找到Theme，将原来的主题换成yilia.</p>
-</li>
-<li><p>回去blog目录hexo g, hexo s即可在本地端口查看到自己的主题。当然你也可以再立刻 hexo d，和刚才一样。把新的主题格式推到github远端上去。</p>
-</li>
-</ol>
+<pre><code>（3）进入source目录下，创建文件： touch Staticfile，必须是这个文件名。
+
+（4）hexo clean + hexo g + hexo d 就可以同时推送到配置的多个平台上。</code></pre>
 <h2 id="更多"><a href="#更多" class="headerlink" title="更多"></a>更多</h2><p>   作者后续会进行相应的更新，包括插入图片、超链接、配置更美观的界面等。请关注作者的其他文章。</p>
 
             </div>
