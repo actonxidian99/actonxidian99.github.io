@@ -171,7 +171,7 @@
     
     <span class="post-meta mr-2">
       <i class="iconfont icon-chart"></i>
-      1.1k 字
+      1.4k 字
     </span>
   
 
@@ -181,7 +181,7 @@
       <i class="iconfont icon-clock-fill"></i>
       
       
-      13
+      15
        分钟
     </span>
   
@@ -266,8 +266,31 @@
 <p>（1）用户名和仓库名字不一致，查看自己github的账号名称和创建的库名称是否一致。</p>
 <p>（2）手机端可以打开但是电脑端页面找不到，有可能是网络问题，别人的网络或许可以访问你的博客；或者是本地无法和github通信，后者请参考这篇文章：</p>
 <p><a target="_blank" rel="noopener" href="https://www.cnblogs.com/notstandalone/p/12496548.html">https://www.cnblogs.com/notstandalone/p/12496548.html</a></p>
+<p>（3）由于网络问题导致的电脑端无法访问，可以考虑部署博客到国内的平台上。</p>
 </li>
 </ol>
+<h3 id="博客部署到码云"><a href="#博客部署到码云" class="headerlink" title="博客部署到码云"></a>博客部署到码云</h3><pre><code>国内的部署可以更快地访问。部署到码云的步骤和github基本相同。
+
+（1）注册并且登陆码云。
+
+（2）创建一个新的仓库。
+
+（3）在码云上添加本地电脑的SSH公钥。
+
+（4）配置博客的_config.yml文件，repo：你的码云仓库网址。
+
+（5）如果你的配置文件里已经有github的仓库网址，删除或注释掉它。
+
+（6）hexo clean + hexo g + hexo d可以把本地的博客推到码云的仓库里。
+
+（7）去到仓库里的“服务“板块，部署打开仓库的pages服务：</code></pre>
+<p><img src="/img/posts/%E5%A6%82%E4%BD%95%E7%94%A8hexo%E6%90%AD%E5%BB%BA%E7%AE%80%E6%98%93%E7%9A%84%E4%B8%AA%E4%BA%BA%E5%8D%9A%E5%AE%A2/%E7%A0%81%E4%BA%91.png" srcset="/img/loading.gif"></p>
+<pre><code>    后会自动产生访问链接。</code></pre>
+<h3 id="博客同时部署到多个平台"><a href="#博客同时部署到多个平台" class="headerlink" title="博客同时部署到多个平台"></a>博客同时部署到多个平台</h3><pre><code>（1）首先需要在这些平台上都创建相应的仓库；
+
+（2）修改 _config.yml文件，repo配置更改示例如下：</code></pre>
+<p><img src="/img/posts/%E5%A6%82%E4%BD%95%E7%94%A8hexo%E6%90%AD%E5%BB%BA%E7%AE%80%E6%98%93%E7%9A%84%E4%B8%AA%E4%BA%BA%E5%8D%9A%E5%AE%A2/repo.png" srcset="/img/loading.gif"></p>
+<pre><code>（3）hexo clean + hexo g + hexo d 就可以同时推送到多个平台上。</code></pre>
 <h3 id="博客的主题"><a href="#博客的主题" class="headerlink" title="博客的主题"></a>博客的主题</h3><p>   更换博客的主题，让你的博客看起来更美观。可以借用hexo提供的模板，在官网hexo.io上可以找到更多模板。</p>
 <p>   以yilia为例：</p>
 <p>   网址：github.com/litten/hexo-theme-yilia</p>
