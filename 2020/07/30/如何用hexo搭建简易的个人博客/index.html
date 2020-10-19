@@ -267,32 +267,31 @@
 <p>（3）由于网络问题导致的电脑端无法访问，可以考虑部署博客到国内的平台上。</p>
 </li>
 </ol>
-<h3 id="博客部署到码云"><a href="#博客部署到码云" class="headerlink" title="博客部署到码云"></a>博客部署到码云</h3><pre><code>国内的部署可以更快地访问。部署到码云的步骤和github基本相同。
-
-（1）注册并且登陆码云。
-
-（2）创建一个新的仓库。
-
-（3）在码云上添加本地电脑的SSH公钥。
-
-（4）配置博客的_config.yml文件，repo：你的码云仓库网址。
-
-（5）如果你的配置文件里已经有github的仓库网址，删除或注释掉它。
-
-（6）hexo clean + hexo g + hexo d可以把本地的博客推到码云的仓库里。
-
-（7）去到仓库里的“服务“板块，部署打开仓库的pages服务：</code></pre>
+<h3 id="博客部署到码云"><a href="#博客部署到码云" class="headerlink" title="博客部署到码云"></a>博客部署到码云</h3><p>  国内的部署可以更快地访问。部署到码云的步骤和github基本相同。</p>
+<ol>
+<li><p>注册并且登陆码云。</p>
+</li>
+<li><p>创建一个新的仓库。</p>
+</li>
+<li><p>在码云上添加本地电脑的SSH公钥。</p>
+</li>
+<li><p>配置博客的_config.yml_文件，repo：你的码云仓库网址。</p>
+</li>
+<li><p>如果你的配置文件里已经有github的仓库网址，删除或注释掉它。</p>
+</li>
+<li><p>hexo clean + hexo g + hexo d可以把本地的博客推到码云的仓库里。</p>
+</li>
+<li><p>去到仓库里的“服务“板块，部署打开仓库的pages服务：</p>
+</li>
+</ol>
 <p><img src="/img/posts/%E5%A6%82%E4%BD%95%E7%94%A8hexo%E6%90%AD%E5%BB%BA%E7%AE%80%E6%98%93%E7%9A%84%E4%B8%AA%E4%BA%BA%E5%8D%9A%E5%AE%A2/gitee.png" srcset="/img/loading.gif"></p>
-<pre><code>    后会自动产生访问链接。</code></pre>
-<h3 id="博客同时部署到多个平台"><a href="#博客同时部署到多个平台" class="headerlink" title="博客同时部署到多个平台"></a>博客同时部署到多个平台</h3><pre><code>（1）首先需要在这些平台上都创建相应的仓库；
-
-（2）修改 _config.yml文件，repo配置更改示例如下：</code></pre>
+<pre><code>    之后会自动产生访问链接。</code></pre>
+<h3 id="博客同时部署到多个平台"><a href="#博客同时部署到多个平台" class="headerlink" title="博客同时部署到多个平台"></a>博客同时部署到多个平台</h3><p>  （1）首先需要在这些平台上都创建相应的仓库；</p>
+<p>  （2）修改 _config.yml_文件，repo配置更改示例如下：</p>
 <p><img src="/img/posts/%E5%A6%82%E4%BD%95%E7%94%A8hexo%E6%90%AD%E5%BB%BA%E7%AE%80%E6%98%93%E7%9A%84%E4%B8%AA%E4%BA%BA%E5%8D%9A%E5%AE%A2/repo.png" srcset="/img/loading.gif"></p>
-<pre><code>（3）进入source目录下，创建文件： touch Staticfile，必须是这个文件名。
-
-（4）hexo clean + hexo g + hexo d 就可以同时推送到配置的多个平台上。
-
-（5）建议尽量部署到国内平台，最后一起推到github上去————因为github推远端时大多时候都要再输入账号密码，这对频繁更新的初学者来说浪费了许多时间。</code></pre>
+<p>  （3）进入source目录下，创建文件： touch Staticfile，必须是这个文件名。</p>
+<p>  （4）hexo clean + hexo g + hexo d 就可以同时推送到配置的多个平台上。</p>
+<p>  （5）建议尽量部署到国内平台，最后一起推到github上去————因为github推远端时大多时候都要再输入账号密码，这对频繁更新的初学者来说浪费了许多时间。</p>
 <h2 id="更多"><a href="#更多" class="headerlink" title="更多"></a>更多</h2><p>   作者后续会进行相应的更新，包括插入图片、超链接、配置更美观的界面等。请关注作者的其他文章。</p>
 <h2 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h2><section class="footnotes"><div class="footnote-list"><ol><li><span id="fn:1" class="footnote-text"><span>codesheep: <a target="_blank" rel="noopener" href="https://www.bilibili.com/video/BV1Yb411a7ty?from=search&amp;seid=11743305723526974314">https://www.bilibili.com/video/BV1Yb411a7ty?from=search&amp;seid=11743305723526974314</a>
 <a href="#fnref:1" rev="footnote" class="footnote-backref"> ↩</a></span></span></li></ol></div></section>
