@@ -1,0 +1,545 @@
+
+
+<!DOCTYPE html>
+<html lang="en" data-default-color-scheme=&#34;auto&#34;>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/favicon.png">
+  <link rel="icon" type="image/png" href="/img/favicon.png">
+  <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="description" content="">
+  <meta name="author" content="John Doe">
+  <meta name="keywords" content="">
+  <title>3. 垃圾收集器与内存分配策略 - Hexo</title>
+
+  <link  rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/4.4.1/css/bootstrap.min.css" />
+
+
+  <link  rel="stylesheet" href="https://cdn.staticfile.org/github-markdown-css/4.0.0/github-markdown.min.css" />
+  <link  rel="stylesheet" href="/lib/hint/hint.min.css" />
+
+  
+    
+    <link  rel="stylesheet" href="https://cdn.staticfile.org/highlight.js/10.0.0/styles/github-gist.min.css" />
+  
+
+  
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_6peoq002giu.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_pjno9b9zyxs.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+<!-- 自定义样式保持在最底部 -->
+
+
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+<meta name="generator" content="Hexo 5.0.0"></head>
+
+
+<body>
+  <header style="height: 70vh;">
+    <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand"
+       href="/">&nbsp;<strong>Memory Lite</strong>&nbsp;</a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                Home
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                Archives
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                Categories
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                Tags
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                About
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" data-toggle="modal" data-target="#modalSearch">&nbsp;<i
+                class="iconfont icon-search"></i>&nbsp;</a>
+          </li>
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" href="javascript:">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+    <div class="banner intro-2" id="background" parallax=true
+         style="background: url('/img/posts/Java%E8%99%9A%E6%8B%9F%E6%9C%BA%E6%95%B4%E7%90%86/%E5%9E%83%E5%9C%BE%E6%94%B6%E9%9B%86%E5%99%A8%E4%B8%8E%E5%86%85%E5%AD%98%E5%88%86%E9%85%8D%E7%AD%96%E7%95%A5.jpg') no-repeat center center;
+           background-size: cover;">
+      <div class="full-bg-img">
+        <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+          <div class="container page-header text-center fade-in-up">
+            <span class="h2" id="subtitle">
+              
+            </span>
+
+            
+              
+  <div class="mt-3 post-meta">
+    <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+    <time datetime="2020-10-21 17:51" pubdate>
+      October 21, 2020 pm
+    </time>
+  </div>
+
+
+<div class="mt-1">
+  
+    
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-chart"></i>
+      6.3k 字
+    </span>
+  
+
+  
+    
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-clock-fill"></i>
+      
+      
+      66
+       分钟
+    </span>
+  
+
+  
+  
+</div>
+
+            
+          </div>
+
+          
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid">
+  <div class="row">
+    <div class="d-none d-lg-block col-lg-2"></div>
+    <div class="col-lg-8 nopadding-md">
+      <div class="container nopadding-md" id="board-ctn">
+        <div class="py-5" id="board">
+          <article class="post-content mx-auto" id="post">
+            <!-- SEO header -->
+            <h1 style="display: none">3. 垃圾收集器与内存分配策略</h1>
+            
+            <div class="markdown-body" id="post-body">
+              <h1 id="垃圾收集器与内存分配策略"><a href="#垃圾收集器与内存分配策略" class="headerlink" title="垃圾收集器与内存分配策略"></a>垃圾收集器与内存分配策略</h1><h2 id="1-概述"><a href="#1-概述" class="headerlink" title="1. 概述"></a>1. 概述</h2><p>　　<em>垃圾收集器</em>（Garbage Collection，GC）历史比Java久远。经过半个多世纪的发展，目前内存动态分配与回收技术已经相当成熟。理解GC和内存分配，有助于我们排查各种内存溢出、内存泄漏问题，攻克垃圾收集称为系统达到更高并发的瓶颈。回顾主题二中的介绍，我们知道程序计数器、Java虚拟机栈、本地方法栈这三区域是<em>线程私有的</em>，和线程共存亡；这几个区域的内存分配和回收都具有确定性，因为每一个栈帧中分配多少内存，大体可以认为在类结构确定下来时就是已知的，在这几个区域不必考虑回收问题。但是Java堆和方法区不同，一个接口中的多个实现类需要的内存可能不同，一个方法多个分支的内存也不一样，只有在程序运行期间才知道会创建哪些对象，这部分的内存分配和回收都是<em>动态的</em>，GC关注的就是这部分内存。  </p>
+<h2 id="2-对象是否死亡的判断"><a href="#2-对象是否死亡的判断" class="headerlink" title="2. 对象是否死亡的判断"></a>2. 对象是否死亡的判断</h2><h3 id="引用计数算法"><a href="#引用计数算法" class="headerlink" title="引用计数算法"></a>引用计数算法</h3><p>　　引用计数法<em>Reference Count</em>简单来说就是给对象中添加引用计数器，每当引用一次，计数器加一，引用失效时就减一。实现简单，判定效率高，但存在的致命问题是无法解决对象间相互引用！也就是因为这个原因，主流Java虚拟机中没有选用此方法。<br>    ### 可达性分析法<br>　　可达性分析（<em>Reachability Analysis</em>）被主流的商用程序语言应用。基本思路是通过一系列称为“<em>GC Roots</em>”的对象作为起始点，从这些结点开始向下搜索，搜索走过的路径称为<em>引用链（Reference Chain）</em>，当一个对象到GC Roots没有任何引用链相连时（图论中所谓“不可达”），证明此对象是不可用的。如图所示的object4、5、6被认为是可回收的对象。<br><img src="/img/posts/Java%E8%99%9A%E6%8B%9F%E6%9C%BA%E6%95%B4%E7%90%86/%E5%8F%AF%E8%BE%BE%E6%80%A7%E5%88%86%E6%9E%90.jpg" srcset="/img/loading.gif"><br>    ### 再谈引用<br>　　上述的两种死亡判断算法都与引用有关。但是如果我们要描述这样的对象：在内存相对空闲时，能保留在内存中；但是在内存紧张时，这类对象可以被GC回收。我们根据引用的强弱程度对引用的概念进行了扩充，从强到弱依次为：强引用、软引用、弱引用、虚引用。<br>    ### 对象的自救<br>　　即使在可达性分析中判定为可回收的对象，也不是“非死不可”的。可达性分析判定为可回收时，该对象处于“缓行”阶段，要真正宣判“死刑”，至少要经历两次<em>标记</em>过程。如果对象在可达性分析中判定为不可达，那么将会被第一次标记并进行一次筛选，筛选条件时次对象是否有必要执行finalize（）方法。如果当前对象未覆盖finalize方法，或finalize方法已经被虚拟机调用过了，虚拟机将这两种情况都视为“没有必要执行”。<br>　　如果对象被判定为有必要执行finalize方法，那么它基本被宣告“死刑”了。但是此时的对象仍然有逃脱的机会。当被判定有必要执行finalize时，对象会被放在一个叫<em>F- Queue</em>的队列中，并在稍后由一个虚拟机建立的、低优先级的<em>Finalizer线程</em>去触发这个方法。所谓的触发是指虚拟机触发这个方法，但不保证会等待它执行结束。处在这个状态中的“犯人”们等待GC对F- Queue中的对象打上第二次小规模的标记。此时如果他们足够幸运，有机会改判“无期徒刑”：当Finalize方法执行缓慢或者死循环，很可能导致F- Queue队列中其他对象处于永久等待！或者也可以选择“改过自新”拯救自己——重新与引用链上的任何一个对象建立关联，那么在第二次标记时将被移出即将回收的集合。如果运气很差又“执迷不悟”的话，那它就真的被回收了。<br>　　现在建议各位忘记finalize（）方法的存在——即时上述的例子足够生动地描述了这个过程。该方法运行代价高昂，不确定性大。它所能做的所有工作，使用try-finali或其他方法都能做的更好。  </p>
+<h2 id="3-垃圾收集算法"><a href="#3-垃圾收集算法" class="headerlink" title="3. 垃圾收集算法"></a>3. 垃圾收集算法</h2><h3 id="标记-清除算法"><a href="#标记-清除算法" class="headerlink" title="标记-清除算法"></a>标记-清除算法</h3><p>　　标记-清除（Mark- Sweep）算法正如其名，先标记出所有要回收的对象，完成后统一回收所有带标记的对象。作为最基础的收集算法，标记-清除算法存在以下问题：首先是效率问题，两个过程的效率都不高；其次是产生大量内存碎片——还记得吗，我们之前讨论内存分配时说到具体的分配方法和GC采用的垃圾收集算法有关，如果虚拟机采用标记-清除法的垃圾收集器，那么分配Java堆内存时采用<em>空闲列表</em>的方法。  </p>
+<h3 id="复制算法"><a href="#复制算法" class="headerlink" title="复制算法"></a>复制算法</h3><p>　　复制（Coping）算法将可用内存容量分为两块，每次使用其中的一块。当这一块内存使用完了，就将存活的对象全部复制到另一块，再把使用过的这一半全部清理掉。实现简单，运行高效。<br>　　现在的商业虚拟机使用该方法回收<em>新生代</em>的对象。新生代98%对象都是朝生夕死的，所以不需要按照1:1比例划分空间，而是分为一块较大的<em>Eden空间</em>和两块较小的<em>Survivor空间</em>，回收时将Eden和Survivor中还存活的对象一次性复制到另外一块Survivor空间上，再清理掉Eden和刚才使用过的Survivor空间。HotSpot默认的Eden和Survivor空间大小是8:1，也就是说只有10%空间被“浪费”。当然我们没法保证每次回收都只有不到10%对象存活，当Survivor空间不足时，需要依赖<em>老年代</em>进行<strong>分配担保</strong>（<em>Handle Promotion</em>）。<br>　　分配担保：如果另外一块Survivor空间没有足够的空间存放上一次新生代收集下来的存活的对象时，这些对象将直接分配进入老年代。  </p>
+<h3 id="标记-整理算法"><a href="#标记-整理算法" class="headerlink" title="标记-整理算法"></a>标记-整理算法</h3><p>　　根据老年代的特点，标记-整理（Mark- Compact）算法应运而生。标记过程和标记-清除算法相同，但后续不是进行清理而是让所有存活的对象都向一端移动，然后直接清理掉端边界以外的内存。  </p>
+<h3 id="分代收集算法"><a href="#分代收集算法" class="headerlink" title="分代收集算法"></a>分代收集算法</h3><p>　　当前的商业虚拟机都采用分代收集（Generational Collection）算法，将Java堆分为新生代和老年代，根据各个年代的特点采用最适当的收集算法。新生代每次垃圾收集都有大量对象被清除，就采用复制算法；而老年代对象存活率高，使用标记-清除或标记-整理算法回收。  </p>
+<h2 id="4-HotSpot算法实现"><a href="#4-HotSpot算法实现" class="headerlink" title="4. HotSpot算法实现"></a>4. HotSpot算法实现</h2><h3 id="枚举GC-Roots"><a href="#枚举GC-Roots" class="headerlink" title="枚举GC Roots"></a>枚举GC Roots</h3><p>　　以可达性分析中从GC Roots节点找引用链为例，可以作为GC Roots的节点主要在全局性的引用与执行上下文中。现在很多应用仅方法区就很大，如果逐个检查其中的引用，必然带来大的内存消耗和时间。<br>　　另外讨论<em>GC停顿</em>——可达性分析工作必须在一个确保一致性的快照中进行，这里的一致性指在整个可达性分析期间，整个执行系统看起来就像被冻结在某个瞬间了一样，也就是说在分析过程中对象引用关系不能处在变化中，否则分析结果的准确性就没有保证。这点是导致GC进行时必须停顿所有Java线程（Sun将这件事称为“Stop The World”）的一个重要原因。<br>　　由于目前的主流Java虚拟机都使用了<em>准确式GC</em>，很好解决了第一个找引用的问题。当执行系统停顿下来后，不需要一个不漏的检查完所有执行上下文和全局变量的引用位置，虚拟机有办法直接得知哪些地方存放对象引用。在HotSpot实现中就是使用一组称为OopMap的数据结构实现这个目的。类加载完成时HotSpot就把对象内什么偏移量处是何种类型的数据算出来，在JIT编译过程中也会在指定位置记录下栈和寄存器中哪些位置是引用。这样GC在扫描时可以直接得知这些信息。  </p>
+<h3 id="安全点"><a href="#安全点" class="headerlink" title="安全点"></a>安全点</h3><p>　　在OopMap协助下HotSpot可以快速完成GC Roots枚举，为了避免OopMap内容变化指令太多而带来的存储空间成本太高的问题，实际上HotSpot也没有为每条指令都生成OopMap，只是在特定的位置记录了这些信息，这些位置称为<em>安全点（Safe point）</em>，即程序执行时，并非在所有地方都能停下来GC，只有到达安全点时才能暂停。对于安全点另一个考虑的问题是，如何在GC发生时让所有的线程都跑到最近的安全点上再停顿下来。现在广泛采用的是<em>主动式中断</em>方式，当GC需要开始Stop The World时，不对线程操作，而是设置一个标志，线程轮询这个标志，发现中断标志为真就自己中断挂起来，轮询标志的设置当然是和安全点重合的。  </p>
+<h3 id="安全区域"><a href="#安全区域" class="headerlink" title="安全区域"></a>安全区域</h3><p>　　如果在发生GC时，有的线程处于Sleep和Block的状态，那么它肯定不能相应JVM的中断请求，也不能自己查询标志。这种情况需要<em>安全区域</em>解决。<br>　　安全区域指在一段代码片段之中，引用关系不会发生变化。此区域中任意地方开始GC都是安全的，也可以理解为其中每一个地方都是Safe point。线程执行到Safe Region中的代码时，高高标识自己进入了“安全区”，这样在JVM要发起GC时就不用管标示为安全的线程了。线程离开安全区域时要检查系统是否已经完成了GC Roots枚举，完成了就继续执行，否则要等待直到收到离开Safe Region的信号为止。    </p>
+<h2 id="5-垃圾收集器"><a href="#5-垃圾收集器" class="headerlink" title="5. 垃圾收集器"></a>5. 垃圾收集器</h2><p>　　收集算法是垃圾收集的方法论，垃圾收集器是具体的实现。JVM规范中对垃圾收集器的实现没有规定，因此不同厂商提供的垃圾收集器可能有很大差别。这个主题的目的是我们会选择对具体应用最合适的收集器。</p>
+<h3 id="（1）Serial收集器"><a href="#（1）Serial收集器" class="headerlink" title="（1）Serial收集器"></a>（1）Serial收集器</h3><p>　　最基本的收集器就是serial收集器了，是一个<em>单线程</em>的收集器，单线程的意思是它只会使用一个CPU或者一条收集线程去完成垃圾收集工作，更重要的是它在进行垃圾收集时，<em>必须暂停其他所有的工作线程直到他收集结束</em>。这对用户来说是难以接受的——你的计算机每工作一小时就暂停响应5分钟，这对很多电脑游戏爱好者来说比洗澡时停水还让人难受。<br>　　但实际上到现在为止Serial收集器依靠它的简单和高效依然被运行在Client模式下的JVM设置为默认的新生代收集器。用户桌面场景中，由于分配给JVM的内存一般不会很大，停顿时间可以控制在一百毫秒内。所以Serial对于运行在Client模式下的虚拟机来说是个很好的选择。  </p>
+<h3 id="（2）ParNew收集器"><a href="#（2）ParNew收集器" class="headerlink" title="（2）ParNew收集器"></a>（2）ParNew收集器</h3><p>　　Serial收集器的多线程版本。除了多线程收集外，其他与Serial收集器没有太大创新之处。但它确实许多运行在<em>Server模式</em>下的虚拟机中首选的新生代收集器（我们提到过许多虚拟机实现对新生代和老年代采用不同的收集器），主要原因是除了Serial外只有ParNew收集器可以和CMS收集器配合工作（CMS稍后介绍，他是HotSpot虚拟机中第一款真正意义上的并发收集器，第一次实现了垃圾收集线程和用户线程基本上同时工作）。</p>
+<h3 id="（3）Parallel-Scavenge收集器"><a href="#（3）Parallel-Scavenge收集器" class="headerlink" title="（3）Parallel Scavenge收集器"></a>（3）Parallel Scavenge收集器</h3><p>　　新生代收集器，同样使用复制算法且是并行的多线程处理器。特点是它的关注点和其他收集器不同——相比于其他收集器关注尽量缩短GC发生时用户线程的停顿时间，Parallel Scavenge 收集器强调达到一个可控制的<em>吞吐量</em>（Throughput）。假定<em>运行用户代码时间</em>为 T ，则吞吐量=T/T+垃圾收集时间）。高吞吐量可以高效利用CPU时间，尽快完成运算任务，适合运行在后台而不需要过多交互的任务。  </p>
+<h3 id="（4）Serial-Old收集器"><a href="#（4）Serial-Old收集器" class="headerlink" title="（4）Serial Old收集器"></a>（4）Serial Old收集器</h3><p>　　Serial收集器的老年版本，是一个使用<em>标记-整理</em>算法的单线程收集器，这个收集器的主要意义也是给在Client模式下的虚拟机使用。  </p>
+<h3 id="（5）Parallel-Old收集器"><a href="#（5）Parallel-Old收集器" class="headerlink" title="（5）Parallel Old收集器"></a>（5）Parallel Old收集器</h3><p>　　Parallel Scavenge收集器的老年版本，使用<em>多线程</em>和<em>标记-整理</em>算法。在Parallel Old收集器出现后，“吞吐量优先”收集器终于有了名副其实的应用组合，在注重吞吐量和CPU资源敏感的场合，都可以优先考虑Parallel Scavenge加Parallel Old收集器。</p>
+<h3 id="（6）CMS收集器"><a href="#（6）CMS收集器" class="headerlink" title="（6）CMS收集器"></a>（6）CMS收集器</h3><p>　　CMS（Concurrent Mark Sweep）收集器是一种以<em>获取最短回收停顿时间</em>为目标的收集器。由于现在很大一部分的Java应用集中在互联网站服务器山，这一类应用尤其重视访问速度，CMS非常符合这类网站的需求。<br>　　从名字上就可以看出CMS是基于标记-清除算法实现的，运作过程分为四个步骤：<br>　　<em>初始标记（CMS initial mark）、并发标记（CMS concurrent mark）、重新标记（CMS remark）、并发清除（CMS concurrent sweep）。  *<br>　　其中，初始标记、重新标记这两步骤仍然需要“Stop The World”，初始标记仅仅是标记一下GC Roots关联到的对象，速度很快；并发标记阶段是进行GC Roots Tracing过程，而重新标记阶段是为了修正并发标记期间因为用户程序继续运作而导致的标记变动，这一部分时间也很短。也正是由于过程中耗时最长的并发标记和并发清除过程中，收集器都可以和用户线程*同时工作</em>，因此总体上CMS收集器的内存回收过程是和用户线程一起并发执行的。<br><strong>CMS的缺点：</strong><br>　　1. 对CPU资源敏感。并发期间由于占用CPU资源导致应用程序变慢。<br>　　2. 无法处理浮动垃圾（Floating Garbage）。由于CMS并发清理阶段用户线程还在继续工作，自然还会有新的垃圾产生，这部分垃圾出现在标记过程之后，CMS无法在本次回收过程中清理他们，只能等待下一次GC。这部分垃圾称为<em>“浮动垃圾”</em>。<br>　　3.CMS基于标记-清除算法实现决定了收集结束时有大量内存碎片产生，从而给大对象的内存分配带来麻烦，无法为大对象找到合适的内存，不得不提前触发一次Full GC。      </p>
+<h3 id="（7）G1收集器"><a href="#（7）G1收集器" class="headerlink" title="（7）G1收集器"></a>（7）G1收集器</h3><p>　　G1收集器（Garbage-First）是一款面向服务端应用的垃圾收集器。具备以下特点：<br>    1. 并行与并发：充分利用多核、多CPU的优势，缩短Stop The World时间。<br>    2. 分代收集：同其他的收集器相同，分代概念在G1收集器中得以保留。虽然G1可以不和其他的GC配合就独立管理整个GC堆，但能采用不同方式处理新对象和多次熬过GC的旧对象。<br>    3. 空间整合：整体上来看G1是基于“标记-整理”算法的收集器。从局部（两个Region）来看是采用“复制”算法的收集器。这意味着在GC期间不会产生内存碎片，GC后，可以提供相对规整的内存。这种特性有利于长期运行程序。<br>    4. 可预测停顿：除了追求低停顿外，G1 还能建立可预测的停顿时间模型，可以让用户指明在未来M毫秒时间段内，消耗在GC过程的时间不超过N毫秒。这几乎已经是实时Java（RTSJ）的垃圾收集器特征了。<br>　　<em>原理</em>：G1之前的其他收集器都将收集范围都是整个新生代或老年代，而G1将整个Java堆划分为多个大小相等、不需要连续的<em>独立区域</em>集合（Region），虽然保留了新生代和老年代的概念，但是他们已经不是物理隔离的了。G1之所以能建立可预测的停顿时间模型，是因为它可以有计划地避免在整个Java堆中进行全区域的垃圾收集。G1跟踪每个Region里面的垃圾堆积的<em>价值</em>大小，这个“垃圾的价值”由回收所能获得的空间大小和回收所需时间的经验值来衡量。G1跟踪这个价值并在后台维护一个<em>优先列表</em>，每次根据允许的收集时间，优先回收价值最大的Region，这也是G1名称Garbage First的来由。<br>　　也许有人注意到了，把Java堆分成若干Region后，GC过程就真的可以以Region为单位进行了吗？换句话说，一个Region不可能是孤立的，一个对象分配在某个Region中，并不能限定它只能和本Region中的其他对象之间发生引用，而是可以和Java堆中任何对象发生引用关系。难道把人类划分为几大家族，家族之间就不允许联姻了吗？正因如此，在可达性分析时岂不是还要扫描整个Java堆才能保证其准确性？<br>　　值得注意的是，这个问题不是只出现在G1中，只是G1中更明显。实际上，无论是G1收集器中Region之间的对象引用，还是其他收集器中的新生代和老年代之间的引用，虚拟机都是使用<em>Remembered Set</em>避免全堆扫描的。简单来说，每个Region中都有对应的Remembered Set，当程序对Reference类型的数据写操作时，会暂时中断写操作（通过一个Write Barri），检查Reference引用的对象是否处于不同Region之间（分代中就是检查老年代对象是否引用了新生代对象），如果是就通过Card Table把相关记录信息记录到被引用对象所属Region的Remembered Set中。内存回收时，在GC根节点枚举范围中加入Remembered Set可保证不对全堆扫描也不会遗漏。<br>　　忽略对Remembered Set的操作，G1收集器的运作大致分为以下步骤：<br>　　初始标记、并发标记、最终标记、筛选回收。      相信很多读者会发现有几个步骤和CMS相似。<em>初始标记</em>阶段仅仅标记一下GC Roots能直接关联的对象，修改Next Top at Mark Start，（NTMS）的值。让下一阶段用户程序并发执行时，能在正确可用的Region中创建新对象。初始标记需要时停，但时间很短。<em>并发标记</em>阶段开始可达性分析，需要时间长，但可以和用户线程并发执行。<em>最终标记</em>阶段为了修正并发标记期间因用户线程而产生变动的记录，虚拟机将变动记录在Remembered Set Logs中，并在此阶段将其并入Remembered Set。这个阶段需要停顿线程，但是可以多线程并行这个过程。最后<em>筛选回收</em>阶段对各个Region的“价值”进行排序，并根据用户期望的GC停顿时间制定回收计划。  </p>
+<h3 id="理解GC日志"><a href="#理解GC日志" class="headerlink" title="理解GC日志"></a>理解GC日志</h3><p>　　GC日志是人为制定的规则，容易理解，只需要参考资料即可，可查阅《深入理解Java虚拟机》（周志明著，第二版，机械工业出版社）P89。  </p>
+<h2 id="6-内存分配策略"><a href="#6-内存分配策略" class="headerlink" title="6.内存分配策略"></a>6.内存分配策略</h2><p>　　Java体系中的自动内存管理可以归结为自动化解决了两个问题：<em>给对象分配内存和回收分配给对象的内存</em>。关于回收我们已经详细介绍过了，接下来看看给对象分配内存时发生了什么。<br>　　我们说过现在的商业虚拟机都采用复制算法回收新生代。下面的讨论基于使用Serial/Serial Old收集器。<br>　　对象的内存分配就是堆上分配（也可能栈上分配），对象主要分配在新生代的<em>Eden区</em>上。如果启用了<em>本地线程缓冲，TLAB</em>，将按照线程在TLAB上分配（我们在介绍对象的创建过程时，讨论到对象创建的并发安全性时介绍过TLAB）。分配的规则不是确定的，而是要看当前使用的哪种垃圾回收组合，以及虚拟机相关参数的设置。  </p>
+<h3 id="（1）对象优先在Eden分配"><a href="#（1）对象优先在Eden分配" class="headerlink" title="（1）对象优先在Eden分配"></a>（1）对象优先在Eden分配</h3><p>　　大多数情况下对象优先在Eden分配。当Eden区空间不足，将发起一次<em>Minor GC</em>（新生代垃圾回收）。<br>　　虚拟机提供了收集器日志参数，告诉虚拟机在发生GC时打印内存回收日志，并在进程退出时输出当前的内存各区域分配情况。新生代中Eden区和Survivor区的大小比例也可以通过参数设置。  </p>
+<h3 id="（2）大对象直接进入老年代"><a href="#（2）大对象直接进入老年代" class="headerlink" title="（2）大对象直接进入老年代"></a>（2）大对象直接进入老年代</h3><p>　　典型的大对象是很长的字符串和数组，大对象对虚拟机的内存分配是个实打实的坏消息，尤其是朝生夕死的大对象是更坏的消息。如果把分配一个大对象内存比做服务一个麻烦的顾客，那么一个朝生夕死的大对象就好像是不仅为这个顾客提供了麻烦的服务，最后还要花费更大的精力全额退款。经常出现大对象，内存容易不得不提前触发GC来安置他们。<br>    虚拟机提供了一个参数，只要需要分配内存的对象大小大于这个参数，这个对象就会<em>直接进入老年代</em>。  </p>
+<h3 id="（3）长期存活的对象进入老年代"><a href="#（3）长期存活的对象进入老年代" class="headerlink" title="（3）长期存活的对象进入老年代"></a>（3）长期存活的对象进入老年代</h3><p>　　虚拟机给每个对象定义了一个<em>对象年龄计数器</em>。如果对象在Eden出生且第一次Minor GC后仍然存活且能被Survivor容纳的话，根据复制算法，它将进入Survivor中，并且将计数器年龄+1。每熬过一次Minor GC，年龄加一。年龄达到阈值（默认15）时，对象晋升到老年代中。  </p>
+<h3 id="（4）动态对象年龄判定"><a href="#（4）动态对象年龄判定" class="headerlink" title="（4）动态对象年龄判定"></a>（4）动态对象年龄判定</h3><p>　　并不是只有年龄计数器达到阈值才可以进入老年代。<em>如果Survivor空间中相同年龄所有对象大小总和大于Survivor空间的一半，年龄大于或等于该年龄的对象就直接进入老年代</em>。  </p>
+<h3 id="（5）空间分配担保"><a href="#（5）空间分配担保" class="headerlink" title="（5）空间分配担保"></a>（5）空间分配担保</h3><p>　　我们在复制算法中同样提到过，survivor空间不足时要依靠老年代进行<em>分配担保</em>，把Survivor无法容纳的对象直接进入老年代。老年代要进行这样的担保，前提是老年代还有足够的容纳空间。<br>　　在发生Minor GC之前虚拟机先检查老年代最大可用空间是否大于<em>新生代所有对象总空间</em>。如果是，那么本次Minor GC可以认为是安全的。否则查看虚拟机参数设置值是否允许担保失败。如果允许检查老年代剩余空间是否大于<em>历次晋升到老年代对象的平均大小</em>，如果大于，将尝试一次Minor GC，尽管冒着风险。如果小于或者虚拟机设置为不允许担保失败，那么改为进行一次<em>Full GC</em>。      所谓的“冒着风险”是指如果本次进入老年代的存活对象大小激增，超出了历次平均的经验值，依然导致<em>担保失败（Handle Promotion Failure）</em>，只好在失败后重新发起Full GC，这样就绕了一大圈。即便如此一般也将虚拟机设置为允许担保失败，可以避免过于频繁的Full GC。</p>
+
+            </div>
+            <hr>
+            <div>
+              <div class="post-metas mb-3">
+                
+                  <div class="post-meta mr-3">
+                    <i class="iconfont icon-category"></i>
+                    
+                      <a class="hover-with-bg" href="/categories/JVM/">JVM</a>
+                    
+                      <a class="hover-with-bg" href="/categories/JVM/%E4%BA%8C%E3%80%81%E5%86%85%E5%AD%98%E8%87%AA%E5%8A%A8%E7%AE%A1%E7%90%86%E6%9C%BA%E5%88%B6/">二、内存自动管理机制</a>
+                    
+                  </div>
+                
+                
+              </div>
+              
+                <p class="note note-warning">本博客所有文章除特别声明外，均采用 <a target="_blank" href="https://creativecommons.org/licenses/by-sa/4.0/deed.zh" rel="nofollow noopener noopener">CC BY-SA 4.0 协议</a> ，转载请注明出处！</p>
+              
+              
+                <div class="post-prevnext row">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2020/10/21/4.%20%E7%B1%BB%E6%96%87%E4%BB%B6%E7%BB%93%E6%9E%84/">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">4. 类文件结构</span>
+                        <span class="visible-mobile">Previous</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2020/10/21/2.%20Java%E5%86%85%E5%AD%98%E5%8C%BA%E5%9F%9F%E6%BA%A2%E5%87%BA%E4%B8%8E%E5%86%85%E5%AD%98%E6%BA%A2%E5%87%BA%E5%BC%82%E5%B8%B8/">
+                        <span class="hidden-mobile">2. Java内存区域溢出与内存溢出异常</span>
+                        <span class="visible-mobile">Next</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+    
+      <div class="d-none d-lg-block col-lg-2 toc-container" id="toc-ctn">
+        <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;TOC</p>
+  <div id="tocbot"></div>
+</div>
+
+      </div>
+    
+  </div>
+</div>
+
+<!-- Custom -->
+
+
+    
+  </main>
+
+  
+    <a id="scroll-top-button" href="#" role="button">
+      <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+    </a>
+  
+
+  
+    <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">Search</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v"
+                 for="local-search-input">keyword</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+  
+
+  
+
+  
+
+  <footer class="mt-5">
+  <div class="text-center py-3">
+    <div>
+      <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a>
+      <i class="iconfont icon-love"></i>
+      <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener">
+        <span>Fluid</span></a>
+    </div>
+    
+
+    
+
+    
+  </div>
+</footer>
+
+<!-- SCRIPTS -->
+<script  src="https://cdn.staticfile.org/jquery/3.4.1/jquery.min.js" ></script>
+<script  src="https://cdn.staticfile.org/twitter-bootstrap/4.4.1/js/bootstrap.min.js" ></script>
+<script  src="/js/debouncer.js" ></script>
+<script  src="/js/main.js" ></script>
+
+<!-- Plugins -->
+
+
+  
+    <script  src="/js/lazyload.js" ></script>
+  
+
+
+
+  <script defer src="https://cdn.staticfile.org/clipboard.js/2.0.6/clipboard.min.js" ></script>
+  <script  src="/js/clipboard-use.js" ></script>
+
+
+
+
+
+
+
+  <script  src="https://cdn.staticfile.org/tocbot/4.11.1/tocbot.min.js" ></script>
+  <script>
+    $(document).ready(function () {
+      var boardCtn = $('#board-ctn');
+      var boardTop = boardCtn.offset().top;
+
+      tocbot.init({
+        tocSelector: '#tocbot',
+        contentSelector: '#post-body',
+        headingSelector: 'h1,h2,h3,h4,h5,h6',
+        linkClass: 'tocbot-link',
+        activeLinkClass: 'tocbot-active-link',
+        listClass: 'tocbot-list',
+        isCollapsedClass: 'tocbot-is-collapsed',
+        collapsibleClass: 'tocbot-is-collapsible',
+        collapseDepth: 0,
+        scrollSmooth: true,
+        headingsOffset: -boardTop
+      });
+      if ($('.toc-list-item').length > 0) {
+        $('#toc').css('visibility', 'visible');
+      }
+    });
+  </script>
+
+
+
+  <script  src="https://cdn.staticfile.org/typed.js/2.0.11/typed.min.js" ></script>
+  <script>
+    var typed = new Typed('#subtitle', {
+      strings: [
+        '  ',
+        "3. 垃圾收集器与内存分配策略&nbsp;",
+      ],
+      cursorChar: "_",
+      typeSpeed: 35,
+      loop: false,
+    });
+    typed.stop();
+    $(document).ready(function () {
+      $(".typed-cursor").addClass("h2");
+      typed.start();
+    });
+  </script>
+
+
+
+  <script  src="https://cdn.staticfile.org/anchor-js/4.2.2/anchor.min.js" ></script>
+  <script>
+    anchors.options = {
+      placement: "right",
+      visible: "hover",
+      
+    };
+    var el = "h1,h2,h3,h4,h5,h6".split(",");
+    var res = [];
+    for (item of el) {
+      res.push(".markdown-body > " + item)
+    }
+    anchors.add(res.join(", "))
+  </script>
+
+
+
+  <script  src="/js/local-search.js" ></script>
+  <script>
+    var path = "/local-search.xml";
+    var inputArea = document.querySelector("#local-search-input");
+    inputArea.onclick = function () {
+      searchFunc(path, 'local-search-input', 'local-search-result');
+      this.onclick = null
+    }
+  </script>
+
+
+
+  <script  src="https://cdn.staticfile.org/fancybox/3.5.7/jquery.fancybox.min.js" ></script>
+  <link  rel="stylesheet" href="https://cdn.staticfile.org/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+  <script>
+    $('#post img:not(.no-zoom img, img[no-zoom]), img[zoom]').each(
+      function () {
+        var element = document.createElement('a');
+        $(element).attr('data-fancybox', 'images');
+        $(element).attr('href', $(this).attr('src'));
+        $(this).wrap(element);
+      }
+    );
+  </script>
+
+
+
+
+
+
+
+  
+  
+    <script>
+      !function (e, t, a) {
+        function r() {
+          for (var e = 0; e < s.length; e++) s[e].alpha <= 0 ? (t.body.removeChild(s[e].el), s.splice(e, 1)) : (s[e].y--, s[e].scale += .004, s[e].alpha -= .013, s[e].el.style.cssText = "left:" + s[e].x + "px;top:" + s[e].y + "px;opacity:" + s[e].alpha + ";transform:scale(" + s[e].scale + "," + s[e].scale + ") rotate(45deg);background:" + s[e].color + ";z-index:99999");
+          requestAnimationFrame(r)
+        }
+
+        function n() {
+          var t = "function" == typeof e.onclick && e.onclick;
+          e.onclick = function (e) {
+            t && t(), o(e)
+          }
+        }
+
+        function o(e) {
+          var a = t.createElement("div");
+          a.className = "heart", s.push({
+            el: a,
+            x: e.clientX - 5,
+            y: e.clientY - 5,
+            scale: 1,
+            alpha: 1,
+            color: c()
+          }), t.body.appendChild(a)
+        }
+
+        function i(e) {
+          var a = t.createElement("style");
+          a.type = "text/css";
+          try {
+            a.appendChild(t.createTextNode(e))
+          } catch (t) {
+            a.styleSheet.cssText = e
+          }
+          t.getElementsByTagName("head")[0].appendChild(a)
+        }
+
+        function c() {
+          return "rgb(" + ~~(255 * Math.random()) + "," + ~~(255 * Math.random()) + "," + ~~(255 * Math.random()) + ")"
+        }
+
+        var s = [];
+        e.requestAnimationFrame = e.requestAnimationFrame || e.webkitRequestAnimationFrame || e.mozRequestAnimationFrame || e.oRequestAnimationFrame || e.msRequestAnimationFrame || function (e) {
+          setTimeout(e, 1e3 / 60)
+        }, i(".heart{width: 10px;height: 10px;position: fixed;background: #f00;transform: rotate(45deg);-webkit-transform: rotate(45deg);-moz-transform: rotate(45deg);}.heart:after,.heart:before{content: '';width: inherit;height: inherit;background: inherit;border-radius: 50%;-webkit-border-radius: 50%;-moz-border-radius: 50%;position: fixed;}.heart:after{top: -5px;}.heart:before{left: -5px;}"), n(), r()
+      }(window, document);
+    </script>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</body>
+</html>
