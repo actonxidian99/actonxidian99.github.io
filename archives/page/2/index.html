@@ -17,20 +17,10 @@
   <meta name="description" content="">
   <meta name="author" content="John Doe">
   <meta name="keywords" content="">
-  <title>test - Hexo</title>
+  <title>Archives - Hexo</title>
 
   <link  rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/4.4.1/css/bootstrap.min.css" />
 
-
-  <link  rel="stylesheet" href="https://cdn.staticfile.org/github-markdown-css/4.0.0/github-markdown.min.css" />
-  <link  rel="stylesheet" href="/lib/hint/hint.min.css" />
-
-  
-    
-    <link  rel="stylesheet" href="https://cdn.staticfile.org/highlight.js/10.0.0/styles/atelier-cave-light.min.css" />
-  
-
-  
 
 
 <!-- 主题依赖的图标库，不要自行修改 -->
@@ -53,7 +43,7 @@
 
 
 <body>
-  <header style="height: 100vh;">
+  <header style="height: 80vh;">
     <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
   <div class="container">
     <a class="navbar-brand"
@@ -147,7 +137,7 @@
 </nav>
 
     <div class="banner intro-2" id="background" parallax=true
-         style="background: url('/img/sections/test.png') no-repeat center center;
+         style="background: url('/img/sections/Archives.jpg') no-repeat center center;
            background-size: cover;">
       <div class="full-bg-img">
         <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
@@ -160,10 +150,6 @@
           </div>
 
           
-            <div class="scroll-down-bar">
-              <i class="iconfont icon-arrowdown"></i>
-            </div>
-          
         </div>
       </div>
     </div>
@@ -173,23 +159,41 @@
     
       <div class="container nopadding-md">
         <div class="py-5" id="board"
-          style=margin-top:0>
+          >
           
           <div class="container">
             <div class="row">
               <div class="col-12 col-md-10 m-auto">
                 
 
-<div class="page-content">
-  <div class="markdown-body">
-----------------
-# 正文
-
-
-<pre><code>测试页面</code></pre>
-<p>&lt;/dev</p>
-
+<div class="list-group">
+  <p class="h4">11 posts in total.</p>
+  <hr>
+  
+    
+      
+      <p class="h5">2020</p>
+    
+    <a href="/2020/07/30/hexo/%E5%A6%82%E4%BD%95%E7%94%A8hexo%E6%90%AD%E5%BB%BA%E7%AE%80%E6%98%93%E7%9A%84%E4%B8%AA%E4%BA%BA%E5%8D%9A%E5%AE%A2/" class="list-group-item list-group-item-action">
+      <span class="archive-post-title">1. 如何用hexo搭建简易的个人博客</span>
+      <time style="float: right;">07-30</time>
+    </a>
+  
 </div>
+
+  <nav aria-label="navigation">
+    <span class="pagination" id="pagination">
+      <a class="extend prev" rel="prev" href="/archives/"><i class="iconfont icon-arrowleft"></i></a><a class="page-number" href="/archives/">1</a><span class="page-number current">2</span>
+    </span>
+  </nav>
+  
+  <script>
+    for (ele of document.getElementById("pagination").getElementsByTagName("a")) {
+      ele.href += '#board';
+    }
+  </script>
+
+
 
               </div>
             </div>
@@ -280,7 +284,7 @@
     var typed = new Typed('#subtitle', {
       strings: [
         '  ',
-        "test&nbsp;",
+        "Archives&nbsp;",
       ],
       cursorChar: "_",
       typeSpeed: 35,
@@ -294,21 +298,6 @@
   </script>
 
 
-
-  <script  src="https://cdn.staticfile.org/anchor-js/4.2.2/anchor.min.js" ></script>
-  <script>
-    anchors.options = {
-      placement: "right",
-      visible: "hover",
-      
-    };
-    var el = "h1,h2,h3,h4,h5,h6".split(",");
-    var res = [];
-    for (item of el) {
-      res.push(".markdown-body > " + item)
-    }
-    anchors.add(res.join(", "))
-  </script>
 
 
 

@@ -17,7 +17,7 @@
   <meta name="description" content="">
   <meta name="author" content="John Doe">
   <meta name="keywords" content="">
-  <title>5. 虚拟机类加载机制 - Hexo</title>
+  <title>2. hexo个人博客的更多基本操作 - Hexo</title>
 
   <link  rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/4.4.1/css/bootstrap.min.css" />
 
@@ -27,7 +27,7 @@
 
   
     
-    <link  rel="stylesheet" href="https://cdn.staticfile.org/highlight.js/10.0.0/styles/github-gist.min.css" />
+    <link  rel="stylesheet" href="https://cdn.staticfile.org/highlight.js/10.0.0/styles/atelier-cave-light.min.css" />
   
 
   
@@ -147,7 +147,7 @@
 </nav>
 
     <div class="banner intro-2" id="background" parallax=true
-         style="background: url('/img/posts/Java%E8%99%9A%E6%8B%9F%E6%9C%BA%E6%95%B4%E7%90%86/%E8%99%9A%E6%8B%9F%E6%9C%BA%E7%B1%BB%E5%8A%A0%E8%BD%BD%E6%9C%BA%E5%88%B6.jpg') no-repeat center center;
+         style="background: url('/img/posts/hexo%E4%B8%AA%E4%BA%BA%E5%8D%9A%E5%AE%A2%E7%9A%84%E6%9B%B4%E5%A4%9A%E5%9F%BA%E6%9C%AC%E6%93%8D%E4%BD%9C/hexo%E4%B8%AA%E4%BA%BA%E5%8D%9A%E5%AE%A2%E7%9A%84%E6%9B%B4%E5%A4%9A%E5%9F%BA%E6%9C%AC%E6%93%8D%E4%BD%9C.png') no-repeat center center;
            background-size: cover;">
       <div class="full-bg-img">
         <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
@@ -160,8 +160,8 @@
               
   <div class="mt-3 post-meta">
     <i class="iconfont icon-date-fill" aria-hidden="true"></i>
-    <time datetime="2020-10-21 17:52" pubdate>
-      October 21, 2020 pm
+    <time datetime="2020-08-03 23:11" pubdate>
+      August 3, 2020 pm
     </time>
   </div>
 
@@ -171,7 +171,7 @@
     
     <span class="post-meta mr-2">
       <i class="iconfont icon-chart"></i>
-      2.8k 字
+      634 字
     </span>
   
 
@@ -181,7 +181,7 @@
       <i class="iconfont icon-clock-fill"></i>
       
       
-      28
+      7
        分钟
     </span>
   
@@ -211,19 +211,51 @@
         <div class="py-5" id="board">
           <article class="post-content mx-auto" id="post">
             <!-- SEO header -->
-            <h1 style="display: none">5. 虚拟机类加载机制</h1>
+            <h1 style="display: none">2. hexo个人博客的更多基本操作</h1>
             
             <div class="markdown-body" id="post-body">
-              <h1 id="虚拟机类加载机制"><a href="#虚拟机类加载机制" class="headerlink" title="虚拟机类加载机制"></a>虚拟机类加载机制</h1><h2 id="1-概述"><a href="#1-概述" class="headerlink" title="1. 概述"></a>1. 概述</h2><p>&amp;nbsp<em>虚拟机类加载机制概念</em>：虚拟机将描述类的数据从Class文件加载到内存，并对数据进行校验、转换解析和初始化，最终形成可以被虚拟机直接使用的Java类型。<br>　　上一章节介绍了Class文件存储格式的细节，在Class文件中描述的各种信息，最终都要加载到虚拟机之后才能运行和使用。虚拟机如何加载这些Class文件，Class文件内容进入虚拟机后产生何种变化？这是本章讨论的内容。  </p>
-<h2 id="2-何时开始类加载过程"><a href="#2-何时开始类加载过程" class="headerlink" title="2. 何时开始类加载过程"></a>2. 何时开始类加载过程</h2><p>　　类从被加载到虚拟机内存中开始，到完全卸载出内存为止，整个生命周期包括：<strong>加载（Loading）、验证（Verification）、准备（Preparation）、解析（Resolution）、初始化（Initialization）、使用（Using）、卸载（Unloading）</strong>7个阶段，其中验证、准备、解析三个部分统称为<strong>连接（Linking）</strong>。<br>　　加载、验证、准备、初始化、卸载这5个阶段顺序是确定的。而解析阶段可能在初始化后开始。另外这7个阶段通常是交叉混合式进行的。<br>　　什么时候开始第一个阶段：加载？Java虚拟机对此没有明确规定，但规定了以下情况必须立即对类进行初始化，那么加载、验证、准备自然需要在此之前进行了：<br>　　1） 遇到new等四条字节码指令时。常见代码场景：new一个关键字实例化对象时；读取一个类的静态字段时；调用一个类静态方法时。<br>　　2） 用java.lang.reflect包方法对类进行反射调用时；<br>　　3） 初始化一个类时，先初始化其父类初始化（如果父类未初始化）；<br>　　4）虚拟机启动时，先初始化包含main的主类；  </p>
-<h2 id="3-类加载过程"><a href="#3-类加载过程" class="headerlink" title="3. 类加载过程"></a>3. 类加载过程</h2><h3 id="（1）加载"><a href="#（1）加载" class="headerlink" title="（1）加载"></a>（1）加载</h3><p>　　加载阶段，虚拟机完成以下事情：<br>　　1） 通过一个类的全限定名称获取此类的二进制字节流。（这个过程是开发人员可控性最强的）<br>　　2） 将此字节流代表的静态存储结构转化为方法区的<em>运行时数据结构</em>。<br>　　3） 内存中生成一个代表该类的<em>java.lang.Class对象</em>，作为方法区这个类的数据访问入口。<br>　　加载完成后，虚拟机外部的二进制字节流就按照虚拟机所需的格式存储在方法区中，具体的存储格式虚拟机可自行定义。然后在内存中实例化<em>java.lang.Class</em>类对象，作为访问方法区中类型数据的外部接口。     </p>
-<h3 id="（2）验证"><a href="#（2）验证" class="headerlink" title="（2）验证"></a>（2）验证</h3><p>　　验证是连接阶段的第一步，目的是<em>确保Class文件字节流中的信息符合当前的虚拟机的要求</em>，并且不会危害虚拟机自身的安全。<br>　　前面提到过Class文件不一定通过Java源码编译而来，可以由任何途径产生，甚至直接用文本编辑器编写。虚拟机如果不检查输入的字节流，盲目信任的话又可能载入有害字节流导致崩溃。验证阶段是否严谨直接决定了虚拟机能否承受恶意代码的攻击。<br>　　验证阶段包括文件格式验证、元数据验证、字节码验证。   </p>
-<h3 id="（3）准备"><a href="#（3）准备" class="headerlink" title="（3）准备"></a>（3）准备</h3><p>　　准备阶段是正式<em>为类变量分配内存并设置类变量初始值</em>的阶段，这些变量所使用的内存都将在方法区中进行分配。这里进行内存分配的<em>仅包括类变量</em>（被static修饰的变量），不包括实例变量，实例变量会在对象实例化时随着对象一起分配在Java堆。其次这里的初始值通常情况下是数据类型的零值。举例：<br>　　public static int value = 123；<br>　　变量value在准备过程后初始值为0而不是123，因为尚未执行任何Java方法，将value赋值为123的操作在初始化阶段才会执行。但如果是：<br>　　public static final int value = 123；<br>　　那么准备阶段value就会初始化为123。  </p>
-<h3 id="（4）解析"><a href="#（4）解析" class="headerlink" title="（4）解析"></a>（4）解析</h3><p>　　解析阶段通常是虚拟机将<em>常量池内的符号引用</em>替换为<em>直接引用</em>的过程；<br>　　<em>符号引用：</em>以一组符号描述引用的目标。符号可以是任何形式的字面量，只要使用时能无歧义地定位到目标即可。符号引用的字面量形式明确定义在Java虚拟机规范的Class文件格式中。<br>　　<em>直接引用（Direct References：</em>直接引用可以是直接指向目标的指针、相对偏移量或者一个能间接定位目标的<em>句柄</em>，如果有了直接引用，那么引用的目标必定已经存在于内存中。直接引用和虚拟机实现的<em>内存布局</em>相关，相同的符号引用，在不同虚拟机上翻译出来的直接引用一般不同。<br>　　对同一个符号进行多次解析的情况并不少见。虚拟机实现可以对第一次解析的结果进行<em>缓存</em>，即在运行时常量池中记录对应的直接引用，并把常量标示为已解析状态。如果一个符号引用以前被成功解析过，那么后续引用解析请求就一直成功；如果第一次解析失败了，那么其他指令对该符号的解析请求也应该收到相同的异常。<br>　　对于用于动态语言支持的invokedynamic指令，上述规则不成立。因为该指令的目的是为了提供<em>动态语言支持</em>，指必须等到程序实际执行到该指令时，解析动作才能执行。相对的，其余可触发解析指令都是“静态的”，在刚刚完成加载阶段，还没有开始执行代码时就进行解析。<br>　　<em>1. 类或接口的解析</em><br>　　现在假设要把一个从未进行过解析的符号引用N解析为一个类或接口C的直接引用，当前代码所属的类为D。<br>    1. 如果要解析的类或接口C不是数组类型，虚拟机把代表N的全限定名传递给D的<em>类加载器</em>去加载类C。如果加载过程出现异常，解析过程宣告失败。<br>    2. 如果C是一个数组类型，并且数组的元素是对象类型，则按照第一点的规则加载数据元素类型。<br>    3. 如果前驱过程没有出现任何异常，那么C在虚拟机中实际上已经成为有效的类或接口了。但是解析完成之前需要进行<em>符号引用验证</em>，确认D是否具备对C的访问权限。如果不具备访问权限，抛出java.lang.IllegalAccessError异常。<br>    <em>2. 字段解析</em><br>    <em>3. 类方法解析</em><br>    <em>4.接口方法解析</em></p>
-<h3 id="（5）初始化"><a href="#（5）初始化" class="headerlink" title="（5）初始化"></a>（5）初始化</h3><p>　　类初始化阶段是类加载过程的最后一步，从这一步才开始真正执行类中定义的Java程序代码（字节码）。      我们说过在准备阶段，变量就已经赋值过一次系统要求的初始值；而在初始化阶段则是根据程序员通过代码制定的计划去初始化类变量和其他资源。初始化是执行类构造器clinit（）方法的过程。   </p>
-<h2 id="4-类加载器"><a href="#4-类加载器" class="headerlink" title="4. 类加载器"></a>4. 类加载器</h2><p>　　虚拟机设计团队把类加载阶段中的“通过一个类的全限定名来获取描述此类的二进制字节流”这个动作放到虚拟机外部实现，以便于让程序自己决定如何获取需要的类，实现这个动作的代码模块称为“<em>类加载器</em>”。</p>
-<h3 id="（1）类和类加载器"><a href="#（1）类和类加载器" class="headerlink" title="（1）类和类加载器"></a>（1）类和类加载器</h3><p>　　对于一个类，需要由加载它的类加载器和该类本身一同确立其在Java虚拟机中的唯一性。也就是说要判定两个类“相等”，只有在这两个类是由同一个类加载器加载的前提下才有意义。否则即使两个类来源于同一个Class文件，被同一个虚拟机加载，只要加载他们的类加载器不同，那这两个类必定不能判定为“相等”。<br>　　这里“相等”的判定，包括代表类的Class对象的equals（）方法、is Instance（）方法的返回结果、使用instanceof关键字做对象所属关系的判定情况。如果不注意类加载器的影响，某些判定情况下会产生迷惑性的结果。    </p>
-<h3 id="（2）双亲委派模型"><a href="#（2）双亲委派模型" class="headerlink" title="（2）双亲委派模型"></a>（2）双亲委派模型</h3><p>　　从Java开发人员的角度看，类加载器可以划分为：<br>    <strong>启动类加载器</strong>（Bootstrap ClassLoader）：负责将放在<JAVA_HOME>\lib中的可被虚拟机识别的类库加载到虚拟机内存中。启动类加载器无法被Java程序直接引用。<br>    <strong>扩展类加载器</strong>（Extension ClassLoader）：可以被开发者直接使用，负责加载<JAVA_HOME>\lib\ext目录中的类库。<br>    <strong>应用程序类加载器</strong>（Application ClassLoader）：也称为系统类加载器。负责加载用户类路径（ClassPath）上指定的类库。<br>    <strong>自定义类加载器</strong>：如果有必要，可以加入自定义的类加载器。<br>    <strong>双亲委派模型</strong>（Parents Delegation Model）：要求除了顶层的启动类加载器之外，其余的类加载器都要有自己的父类加载器。类加载器的父子关系一般不会以继承实现，而是以组合关系复用父加载器的代码。<br>　　<strong>工作过程</strong>：如果一个类加载器收到了加载类的请求，首先不会尝试自行加载该类，而是将请求<strong>委派</strong>给父类加载器去执行。每一个层次的加载器都是如此，因此所有的加载请求最终都会传送到顶层的启动类加载器中，只有当父类加载器反馈自己不能完成这个加载请求时，子加载器才会尝试自己加载。<br>　　<strong>优点</strong>：双亲委派模型的一个显而易见的好处是Java类随着类加载器一起具备了一种带有优先级的层次关系。例如类java.lang.Object，无论哪个类加载器要求加载该类，最终都会交给最顶端的启动类加载器加载（启动能加载器可以自己加载这个类），因此Object类在程序中的各种类加载环境中都是同一个类。如果没有使用双亲委派模型，各个类自行加载的话，如果用户自己编写了一个同名的类并放在程序的ClassPath中，那系统中将会出现多个同名的但是实际不同的Objet类，应用程序将一片混乱！</p>
+              <h2 id="声明"><a href="#声明" class="headerlink" title="声明"></a>声明</h2><pre><code>本文章内容浅显偏重基本操作，只为初学者提供相关的参考。</code></pre>
+<h3 id="概要：-博客中插入图片；-git下拷贝；-简单更换博客的主题；-博客页面美观化；"><a href="#概要：-博客中插入图片；-git下拷贝；-简单更换博客的主题；-博客页面美观化；" class="headerlink" title="概要： 博客中插入图片； git下拷贝； 简单更换博客的主题； 博客页面美观化；"></a>概要： 博客中插入图片； git下拷贝； 简单更换博客的主题； 博客页面美观化；</h3><pre><code>另外，还不清楚怎么部署博客到多个平台的同学参考：https://actonxidian99.gitee.io/2020/07/30/如何用hexo搭建简易的个人博客/</code></pre>
+<h2 id="关于如何在博客中插入图片"><a href="#关于如何在博客中插入图片" class="headerlink" title="关于如何在博客中插入图片"></a>关于如何在博客中插入图片</h2><pre><code>1. 本地引用，在本地的 source 目录下创建一个图片文件夹 imags，存放图片，在博文文章中通过以下格式引用：
+
+假如我创建的images目录下有名为 testimage 的 jpg 格式照片，那么引用为：
+
+![](/images/testimage.jpg)
+
+这样的Markdown语法即可插入本地图片到博客。
+
+2. 远程服务端引用，支持引用</code></pre>
+<h2 id="如何在git下复制文件"><a href="#如何在git下复制文件" class="headerlink" title="如何在git下复制文件"></a>如何在git下复制文件</h2><pre><code>使用命令：cat
+
+将电脑本地的文件复制到粘贴板：
+
+cat filename &gt; /dev/clipboard
+
+粘贴板的内容复制到本地文件（这个本地文件支持txt和doc文件等）：
+
+cat /dev/clipboard &gt; filename</code></pre>
+<h2 id="简单地更换博客主题"><a href="#简单地更换博客主题" class="headerlink" title="简单地更换博客主题"></a>简单地更换博客主题</h2><pre><code>更换博客的主题，让你的博客看起来更美观。可以借用hexo提供的模板，在官网hexo.io上可以找到更多模板。
+
+以yilia主题为例：
+
+网址：github.com/litten/hexo-theme-yilia
+
+1. 本地git端下载主题： blog 目录下，git clone https://github.com/litten/hexo-theme-yilia.git themes/yilla 
+
+将该网址下的主题复制到本地的themes/yilia目录下。如果和github的链接太慢，可以去下载压缩包，手动解压复制到当前的文件下。当然你需要重命名这个解压文件。
+
+2. 进入theme目录下，ls可以看到刚下载的主题。
+
+3. 配置到自己的博客：blog目录下再次配置 _config.yml文件：
+
+找到Theme，将原来的主题换成yilia.
+
+4. 回去blog目录hexo g, hexo s即可在本地端口查看到自己的主题。当然你也可以再立刻 hexo d，和刚才一样。把新的主题格式推到github远端上去。</code></pre>
+<h2 id="博客页面更加美观"><a href="#博客页面更加美观" class="headerlink" title="博客页面更加美观"></a>博客页面更加美观</h2><pre><code>1. 下载你心仪的主题时，注意，在对应的主题说明文件中有相关的详细配置，比如我应用的fluid主题相关的配置文件在：
+
+https://hexo.fluid-dev.com/docs/guide/
+
+2. 确定主题之后根据相应的详细配置说明文档，更好地布置你博客页面的字体、颜色、图片和链接吧！</code></pre>
 
             </div>
             <hr>
@@ -233,9 +265,7 @@
                   <div class="post-meta mr-3">
                     <i class="iconfont icon-category"></i>
                     
-                      <a class="hover-with-bg" href="/categories/JVM/">JVM</a>
-                    
-                      <a class="hover-with-bg" href="/categories/JVM/%E4%B8%89%E3%80%81%E8%99%9A%E6%8B%9F%E6%9C%BA%E6%89%A7%E8%A1%8C%E5%AD%90%E7%B3%BB%E7%BB%9F/">三、虚拟机执行子系统</a>
+                      <a class="hover-with-bg" href="/categories/Hexo/">Hexo</a>
                     
                   </div>
                 
@@ -249,9 +279,9 @@
                   <article class="post-prev col-6">
                     
                     
-                      <a href="/2020/10/21/1.%20JVM%E5%A4%A7%E7%BA%B2/">
+                      <a href="/2020/08/08/Operating%20System/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E5%A4%A7%E7%BA%B2/">
                         <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile">1. JVM大纲</span>
+                        <span class="hidden-mobile">操作系统大纲</span>
                         <span class="visible-mobile">Previous</span>
                       </a>
                     
@@ -259,8 +289,8 @@
                   <article class="post-next col-6">
                     
                     
-                      <a href="/2020/10/21/4.%20%E7%B1%BB%E6%96%87%E4%BB%B6%E7%BB%93%E6%9E%84/">
-                        <span class="hidden-mobile">4. 类文件结构</span>
+                      <a href="/2020/07/30/hexo/%E5%A6%82%E4%BD%95%E7%94%A8hexo%E6%90%AD%E5%BB%BA%E7%AE%80%E6%98%93%E7%9A%84%E4%B8%AA%E4%BA%BA%E5%8D%9A%E5%AE%A2/">
+                        <span class="hidden-mobile">1. 如何用hexo搭建简易的个人博客</span>
                         <span class="visible-mobile">Next</span>
                         <i class="iconfont icon-arrowright"></i>
                       </a>
@@ -399,7 +429,7 @@
     var typed = new Typed('#subtitle', {
       strings: [
         '  ',
-        "5. 虚拟机类加载机制&nbsp;",
+        "2. hexo个人博客的更多基本操作&nbsp;",
       ],
       cursorChar: "_",
       typeSpeed: 35,

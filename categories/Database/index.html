@@ -17,20 +17,10 @@
   <meta name="description" content="">
   <meta name="author" content="John Doe">
   <meta name="keywords" content="">
-  <title>test - Hexo</title>
+  <title>Categories - Database - Hexo</title>
 
   <link  rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/4.4.1/css/bootstrap.min.css" />
 
-
-  <link  rel="stylesheet" href="https://cdn.staticfile.org/github-markdown-css/4.0.0/github-markdown.min.css" />
-  <link  rel="stylesheet" href="/lib/hint/hint.min.css" />
-
-  
-    
-    <link  rel="stylesheet" href="https://cdn.staticfile.org/highlight.js/10.0.0/styles/atelier-cave-light.min.css" />
-  
-
-  
 
 
 <!-- 主题依赖的图标库，不要自行修改 -->
@@ -53,7 +43,7 @@
 
 
 <body>
-  <header style="height: 100vh;">
+  <header style="height: 80vh;">
     <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
   <div class="container">
     <a class="navbar-brand"
@@ -147,7 +137,7 @@
 </nav>
 
     <div class="banner intro-2" id="background" parallax=true
-         style="background: url('/img/sections/test.png') no-repeat center center;
+         style="background: url('/img/sections/category.jpg') no-repeat center center;
            background-size: cover;">
       <div class="full-bg-img">
         <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
@@ -160,10 +150,6 @@
           </div>
 
           
-            <div class="scroll-down-bar">
-              <i class="iconfont icon-arrowdown"></i>
-            </div>
-          
         </div>
       </div>
     </div>
@@ -173,23 +159,35 @@
     
       <div class="container nopadding-md">
         <div class="py-5" id="board"
-          style=margin-top:0>
+          >
           
           <div class="container">
             <div class="row">
               <div class="col-12 col-md-10 m-auto">
                 
 
-<div class="page-content">
-  <div class="markdown-body">
-----------------
-# 正文
-
-
-<pre><code>测试页面</code></pre>
-<p>&lt;/dev</p>
-
+<div class="list-group">
+  <p class="h4">2 posts in total.</p>
+  <hr>
+  
+    
+      
+      <p class="h5">2020</p>
+    
+    <a href="/2020/10/22/Database%20System%20Concepts/1.%20%E5%85%B3%E7%B3%BB%E6%A8%A1%E5%9E%8B%E4%BB%8B%E7%BB%8D/" class="list-group-item list-group-item-action">
+      <span class="archive-post-title">1. 关系模型介绍</span>
+      <time style="float: right;">10-22</time>
+    </a>
+  
+    
+    <a href="/2020/10/22/Database%20System%20Concepts/2.%20SQL/" class="list-group-item list-group-item-action">
+      <span class="archive-post-title">2. SQL</span>
+      <time style="float: right;">10-22</time>
+    </a>
+  
 </div>
+
+
 
               </div>
             </div>
@@ -280,7 +278,7 @@
     var typed = new Typed('#subtitle', {
       strings: [
         '  ',
-        "test&nbsp;",
+        "Category - Database&nbsp;",
       ],
       cursorChar: "_",
       typeSpeed: 35,
@@ -294,21 +292,6 @@
   </script>
 
 
-
-  <script  src="https://cdn.staticfile.org/anchor-js/4.2.2/anchor.min.js" ></script>
-  <script>
-    anchors.options = {
-      placement: "right",
-      visible: "hover",
-      
-    };
-    var el = "h1,h2,h3,h4,h5,h6".split(",");
-    var res = [];
-    for (item of el) {
-      res.push(".markdown-body > " + item)
-    }
-    anchors.add(res.join(", "))
-  </script>
 
 
 

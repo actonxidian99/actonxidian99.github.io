@@ -17,20 +17,10 @@
   <meta name="description" content="">
   <meta name="author" content="John Doe">
   <meta name="keywords" content="">
-  <title>test - Hexo</title>
+  <title>Hexo</title>
 
   <link  rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/4.4.1/css/bootstrap.min.css" />
 
-
-  <link  rel="stylesheet" href="https://cdn.staticfile.org/github-markdown-css/4.0.0/github-markdown.min.css" />
-  <link  rel="stylesheet" href="/lib/hint/hint.min.css" />
-
-  
-    
-    <link  rel="stylesheet" href="https://cdn.staticfile.org/highlight.js/10.0.0/styles/atelier-cave-light.min.css" />
-  
-
-  
 
 
 <!-- 主题依赖的图标库，不要自行修改 -->
@@ -147,7 +137,7 @@
 </nav>
 
     <div class="banner intro-2" id="background" parallax=true
-         style="background: url('/img/sections/test.png') no-repeat center center;
+         style="background: url('/img/sections/blog.png') no-repeat center center;
            background-size: cover;">
       <div class="full-bg-img">
         <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
@@ -180,16 +170,69 @@
               <div class="col-12 col-md-10 m-auto">
                 
 
-<div class="page-content">
-  <div class="markdown-body">
-----------------
-# 正文
+
+  <div class="row mx-auto index-card">
+    
+    
+      <div class="col-12 col-md-4 m-auto index-img">
+        <a href="/2020/07/30/hexo/%E5%A6%82%E4%BD%95%E7%94%A8hexo%E6%90%AD%E5%BB%BA%E7%AE%80%E6%98%93%E7%9A%84%E4%B8%AA%E4%BA%BA%E5%8D%9A%E5%AE%A2/" target="_blank">
+          <img src="/img/posts/%E5%A6%82%E4%BD%95%E7%94%A8hexo%E6%90%AD%E5%BB%BA%E7%AE%80%E6%98%93%E7%9A%84%E4%B8%AA%E4%BA%BA%E5%8D%9A%E5%AE%A2.png" srcset="/img/loading.gif" alt="1. 如何用hexo搭建简易的个人博客">
+        </a>
+      </div>
+    
+    <article class="col-12 col-md-8 mx-auto index-info">
+      <h1 class="index-header">
+        <a href="/2020/07/30/hexo/%E5%A6%82%E4%BD%95%E7%94%A8hexo%E6%90%AD%E5%BB%BA%E7%AE%80%E6%98%93%E7%9A%84%E4%B8%AA%E4%BA%BA%E5%8D%9A%E5%AE%A2/">1. 如何用hexo搭建简易的个人博客</a>
+      </h1>
+
+      <p class="index-excerpt">
+        <a href="/2020/07/30/hexo/%E5%A6%82%E4%BD%95%E7%94%A8hexo%E6%90%AD%E5%BB%BA%E7%AE%80%E6%98%93%E7%9A%84%E4%B8%AA%E4%BA%BA%E5%8D%9A%E5%AE%A2/">
+          
+          
+            
+          
+          有关如何用hexo搭建简易个人博客的一些声明   本文章的教学范围仅限于搭建简易的个人博客，是参考 codesheep 在B站上的视频[1]一步步做出来的，想要深入了解的读者可以去仔细研读。本文章只是对羊哥视频的复盘，仅供仍然存在困难的读者一些参考。作者安装的Windows 64位，和羊哥的Mac版本略有不同。
+概要：搭建hexo博客； 将博客部署到github、码云、coding平台的方法。搭建
+        </a>
+      </p>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2020-07-30 19:28" pubdate>
+              2020-07-30
+            </time>
+          </div>
+        
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-category"></i>
+            
+              <a href="/categories/Hexo/">Hexo</a>
+            
+          </div>
+        
+        
+      </div>
+    </article>
+  </div>
 
 
-<pre><code>测试页面</code></pre>
-<p>&lt;/dev</p>
 
-</div>
+  <nav aria-label="navigation">
+    <span class="pagination" id="pagination">
+      <a class="extend prev" rel="prev" href="/"><i class="iconfont icon-arrowleft"></i></a><a class="page-number" href="/">1</a><span class="page-number current">2</span>
+    </span>
+  </nav>
+  
+  <script>
+    for (ele of document.getElementById("pagination").getElementsByTagName("a")) {
+      ele.href += '#board';
+    }
+  </script>
+
+
 
               </div>
             </div>
@@ -280,7 +323,7 @@
     var typed = new Typed('#subtitle', {
       strings: [
         '  ',
-        "test&nbsp;",
+        "Welcome to my blog!&nbsp;",
       ],
       cursorChar: "_",
       typeSpeed: 35,
@@ -294,21 +337,6 @@
   </script>
 
 
-
-  <script  src="https://cdn.staticfile.org/anchor-js/4.2.2/anchor.min.js" ></script>
-  <script>
-    anchors.options = {
-      placement: "right",
-      visible: "hover",
-      
-    };
-    var el = "h1,h2,h3,h4,h5,h6".split(",");
-    var res = [];
-    for (item of el) {
-      res.push(".markdown-body > " + item)
-    }
-    anchors.add(res.join(", "))
-  </script>
 
 
 

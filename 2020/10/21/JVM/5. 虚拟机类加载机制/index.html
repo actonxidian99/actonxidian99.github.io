@@ -1,0 +1,531 @@
+
+
+<!DOCTYPE html>
+<html lang="en" data-default-color-scheme=&#34;auto&#34;>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/favicon.png">
+  <link rel="icon" type="image/png" href="/img/favicon.png">
+  <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="description" content="">
+  <meta name="author" content="John Doe">
+  <meta name="keywords" content="">
+  <title>5. 虚拟机类加载机制 - Hexo</title>
+
+  <link  rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/4.4.1/css/bootstrap.min.css" />
+
+
+  <link  rel="stylesheet" href="https://cdn.staticfile.org/github-markdown-css/4.0.0/github-markdown.min.css" />
+  <link  rel="stylesheet" href="/lib/hint/hint.min.css" />
+
+  
+    
+    <link  rel="stylesheet" href="https://cdn.staticfile.org/highlight.js/10.0.0/styles/atelier-cave-light.min.css" />
+  
+
+  
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_6peoq002giu.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_pjno9b9zyxs.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+<!-- 自定义样式保持在最底部 -->
+
+
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+<meta name="generator" content="Hexo 5.0.0"></head>
+
+
+<body>
+  <header style="height: 70vh;">
+    <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand"
+       href="/">&nbsp;<strong>Memory Lite</strong>&nbsp;</a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                Home
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                Archives
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                Categories
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                Tags
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                About
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" data-toggle="modal" data-target="#modalSearch">&nbsp;<i
+                class="iconfont icon-search"></i>&nbsp;</a>
+          </li>
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" href="javascript:">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+    <div class="banner intro-2" id="background" parallax=true
+         style="background: url('/img/posts/Java%E8%99%9A%E6%8B%9F%E6%9C%BA%E6%95%B4%E7%90%86/%E8%99%9A%E6%8B%9F%E6%9C%BA%E7%B1%BB%E5%8A%A0%E8%BD%BD%E6%9C%BA%E5%88%B6.jpg') no-repeat center center;
+           background-size: cover;">
+      <div class="full-bg-img">
+        <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+          <div class="container page-header text-center fade-in-up">
+            <span class="h2" id="subtitle">
+              
+            </span>
+
+            
+              
+  <div class="mt-3 post-meta">
+    <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+    <time datetime="2020-10-21 17:52" pubdate>
+      October 21, 2020 pm
+    </time>
+  </div>
+
+
+<div class="mt-1">
+  
+    
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-chart"></i>
+      2.8k 字
+    </span>
+  
+
+  
+    
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-clock-fill"></i>
+      
+      
+      28
+       分钟
+    </span>
+  
+
+  
+  
+</div>
+
+            
+          </div>
+
+          
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid">
+  <div class="row">
+    <div class="d-none d-lg-block col-lg-2"></div>
+    <div class="col-lg-8 nopadding-md">
+      <div class="container nopadding-md" id="board-ctn">
+        <div class="py-5" id="board">
+          <article class="post-content mx-auto" id="post">
+            <!-- SEO header -->
+            <h1 style="display: none">5. 虚拟机类加载机制</h1>
+            
+            <div class="markdown-body" id="post-body">
+              <h1 id="虚拟机类加载机制"><a href="#虚拟机类加载机制" class="headerlink" title="虚拟机类加载机制"></a>虚拟机类加载机制</h1><h2 id="1-概述"><a href="#1-概述" class="headerlink" title="1. 概述"></a>1. 概述</h2><p>&amp;nbsp<em>虚拟机类加载机制概念</em>：虚拟机将描述类的数据从Class文件加载到内存，并对数据进行校验、转换解析和初始化，最终形成可以被虚拟机直接使用的Java类型。<br>　　上一章节介绍了Class文件存储格式的细节，在Class文件中描述的各种信息，最终都要加载到虚拟机之后才能运行和使用。虚拟机如何加载这些Class文件，Class文件内容进入虚拟机后产生何种变化？这是本章讨论的内容。  </p>
+<h2 id="2-何时开始类加载过程"><a href="#2-何时开始类加载过程" class="headerlink" title="2. 何时开始类加载过程"></a>2. 何时开始类加载过程</h2><p>　　类从被加载到虚拟机内存中开始，到完全卸载出内存为止，整个生命周期包括：<strong>加载（Loading）、验证（Verification）、准备（Preparation）、解析（Resolution）、初始化（Initialization）、使用（Using）、卸载（Unloading）</strong>7个阶段，其中验证、准备、解析三个部分统称为<strong>连接（Linking）</strong>。<br>　　加载、验证、准备、初始化、卸载这5个阶段顺序是确定的。而解析阶段可能在初始化后开始。另外这7个阶段通常是交叉混合式进行的。<br>　　什么时候开始第一个阶段：加载？Java虚拟机对此没有明确规定，但规定了以下情况必须立即对类进行初始化，那么加载、验证、准备自然需要在此之前进行了：<br>　　1） 遇到new等四条字节码指令时。常见代码场景：new一个关键字实例化对象时；读取一个类的静态字段时；调用一个类静态方法时。<br>　　2） 用java.lang.reflect包方法对类进行反射调用时；<br>　　3） 初始化一个类时，先初始化其父类初始化（如果父类未初始化）；<br>　　4）虚拟机启动时，先初始化包含main的主类；  </p>
+<h2 id="3-类加载过程"><a href="#3-类加载过程" class="headerlink" title="3. 类加载过程"></a>3. 类加载过程</h2><h3 id="（1）加载"><a href="#（1）加载" class="headerlink" title="（1）加载"></a>（1）加载</h3><p>　　加载阶段，虚拟机完成以下事情：<br>　　1） 通过一个类的全限定名称获取此类的二进制字节流。（这个过程是开发人员可控性最强的）<br>　　2） 将此字节流代表的静态存储结构转化为方法区的<em>运行时数据结构</em>。<br>　　3） 内存中生成一个代表该类的<em>java.lang.Class对象</em>，作为方法区这个类的数据访问入口。<br>　　加载完成后，虚拟机外部的二进制字节流就按照虚拟机所需的格式存储在方法区中，具体的存储格式虚拟机可自行定义。然后在内存中实例化<em>java.lang.Class</em>类对象，作为访问方法区中类型数据的外部接口。     </p>
+<h3 id="（2）验证"><a href="#（2）验证" class="headerlink" title="（2）验证"></a>（2）验证</h3><p>　　验证是连接阶段的第一步，目的是<em>确保Class文件字节流中的信息符合当前的虚拟机的要求</em>，并且不会危害虚拟机自身的安全。<br>　　前面提到过Class文件不一定通过Java源码编译而来，可以由任何途径产生，甚至直接用文本编辑器编写。虚拟机如果不检查输入的字节流，盲目信任的话又可能载入有害字节流导致崩溃。验证阶段是否严谨直接决定了虚拟机能否承受恶意代码的攻击。<br>　　验证阶段包括文件格式验证、元数据验证、字节码验证。   </p>
+<h3 id="（3）准备"><a href="#（3）准备" class="headerlink" title="（3）准备"></a>（3）准备</h3><p>　　准备阶段是正式<em>为类变量分配内存并设置类变量初始值</em>的阶段，这些变量所使用的内存都将在方法区中进行分配。这里进行内存分配的<em>仅包括类变量</em>（被static修饰的变量），不包括实例变量，实例变量会在对象实例化时随着对象一起分配在Java堆。其次这里的初始值通常情况下是数据类型的零值。举例：<br>　　public static int value = 123；<br>　　变量value在准备过程后初始值为0而不是123，因为尚未执行任何Java方法，将value赋值为123的操作在初始化阶段才会执行。但如果是：<br>　　public static final int value = 123；<br>　　那么准备阶段value就会初始化为123。  </p>
+<h3 id="（4）解析"><a href="#（4）解析" class="headerlink" title="（4）解析"></a>（4）解析</h3><p>　　解析阶段通常是虚拟机将<em>常量池内的符号引用</em>替换为<em>直接引用</em>的过程；<br>　　<em>符号引用：</em>以一组符号描述引用的目标。符号可以是任何形式的字面量，只要使用时能无歧义地定位到目标即可。符号引用的字面量形式明确定义在Java虚拟机规范的Class文件格式中。<br>　　<em>直接引用（Direct References：</em>直接引用可以是直接指向目标的指针、相对偏移量或者一个能间接定位目标的<em>句柄</em>，如果有了直接引用，那么引用的目标必定已经存在于内存中。直接引用和虚拟机实现的<em>内存布局</em>相关，相同的符号引用，在不同虚拟机上翻译出来的直接引用一般不同。<br>　　对同一个符号进行多次解析的情况并不少见。虚拟机实现可以对第一次解析的结果进行<em>缓存</em>，即在运行时常量池中记录对应的直接引用，并把常量标示为已解析状态。如果一个符号引用以前被成功解析过，那么后续引用解析请求就一直成功；如果第一次解析失败了，那么其他指令对该符号的解析请求也应该收到相同的异常。<br>　　对于用于动态语言支持的invokedynamic指令，上述规则不成立。因为该指令的目的是为了提供<em>动态语言支持</em>，指必须等到程序实际执行到该指令时，解析动作才能执行。相对的，其余可触发解析指令都是“静态的”，在刚刚完成加载阶段，还没有开始执行代码时就进行解析。<br>　　<em>1. 类或接口的解析</em><br>　　现在假设要把一个从未进行过解析的符号引用N解析为一个类或接口C的直接引用，当前代码所属的类为D。<br>    1. 如果要解析的类或接口C不是数组类型，虚拟机把代表N的全限定名传递给D的<em>类加载器</em>去加载类C。如果加载过程出现异常，解析过程宣告失败。<br>    2. 如果C是一个数组类型，并且数组的元素是对象类型，则按照第一点的规则加载数据元素类型。<br>    3. 如果前驱过程没有出现任何异常，那么C在虚拟机中实际上已经成为有效的类或接口了。但是解析完成之前需要进行<em>符号引用验证</em>，确认D是否具备对C的访问权限。如果不具备访问权限，抛出java.lang.IllegalAccessError异常。<br>    <em>2. 字段解析</em><br>    <em>3. 类方法解析</em><br>    <em>4.接口方法解析</em></p>
+<h3 id="（5）初始化"><a href="#（5）初始化" class="headerlink" title="（5）初始化"></a>（5）初始化</h3><p>　　类初始化阶段是类加载过程的最后一步，从这一步才开始真正执行类中定义的Java程序代码（字节码）。      我们说过在准备阶段，变量就已经赋值过一次系统要求的初始值；而在初始化阶段则是根据程序员通过代码制定的计划去初始化类变量和其他资源。初始化是执行类构造器clinit（）方法的过程。   </p>
+<h2 id="4-类加载器"><a href="#4-类加载器" class="headerlink" title="4. 类加载器"></a>4. 类加载器</h2><p>　　虚拟机设计团队把类加载阶段中的“通过一个类的全限定名来获取描述此类的二进制字节流”这个动作放到虚拟机外部实现，以便于让程序自己决定如何获取需要的类，实现这个动作的代码模块称为“<em>类加载器</em>”。</p>
+<h3 id="（1）类和类加载器"><a href="#（1）类和类加载器" class="headerlink" title="（1）类和类加载器"></a>（1）类和类加载器</h3><p>　　对于一个类，需要由加载它的类加载器和该类本身一同确立其在Java虚拟机中的唯一性。也就是说要判定两个类“相等”，只有在这两个类是由同一个类加载器加载的前提下才有意义。否则即使两个类来源于同一个Class文件，被同一个虚拟机加载，只要加载他们的类加载器不同，那这两个类必定不能判定为“相等”。<br>　　这里“相等”的判定，包括代表类的Class对象的equals（）方法、is Instance（）方法的返回结果、使用instanceof关键字做对象所属关系的判定情况。如果不注意类加载器的影响，某些判定情况下会产生迷惑性的结果。    </p>
+<h3 id="（2）双亲委派模型"><a href="#（2）双亲委派模型" class="headerlink" title="（2）双亲委派模型"></a>（2）双亲委派模型</h3><p>　　从Java开发人员的角度看，类加载器可以划分为：<br>    <strong>启动类加载器</strong>（Bootstrap ClassLoader）：负责将放在<JAVA_HOME>\lib中的可被虚拟机识别的类库加载到虚拟机内存中。启动类加载器无法被Java程序直接引用。<br>    <strong>扩展类加载器</strong>（Extension ClassLoader）：可以被开发者直接使用，负责加载<JAVA_HOME>\lib\ext目录中的类库。<br>    <strong>应用程序类加载器</strong>（Application ClassLoader）：也称为系统类加载器。负责加载用户类路径（ClassPath）上指定的类库。<br>    <strong>自定义类加载器</strong>：如果有必要，可以加入自定义的类加载器。<br>    <strong>双亲委派模型</strong>（Parents Delegation Model）：要求除了顶层的启动类加载器之外，其余的类加载器都要有自己的父类加载器。类加载器的父子关系一般不会以继承实现，而是以组合关系复用父加载器的代码。<br>　　<strong>工作过程</strong>：如果一个类加载器收到了加载类的请求，首先不会尝试自行加载该类，而是将请求<strong>委派</strong>给父类加载器去执行。每一个层次的加载器都是如此，因此所有的加载请求最终都会传送到顶层的启动类加载器中，只有当父类加载器反馈自己不能完成这个加载请求时，子加载器才会尝试自己加载。<br>　　<strong>优点</strong>：双亲委派模型的一个显而易见的好处是Java类随着类加载器一起具备了一种带有优先级的层次关系。例如类java.lang.Object，无论哪个类加载器要求加载该类，最终都会交给最顶端的启动类加载器加载（启动能加载器可以自己加载这个类），因此Object类在程序中的各种类加载环境中都是同一个类。如果没有使用双亲委派模型，各个类自行加载的话，如果用户自己编写了一个同名的类并放在程序的ClassPath中，那系统中将会出现多个同名的但是实际不同的Objet类，应用程序将一片混乱！</p>
+
+            </div>
+            <hr>
+            <div>
+              <div class="post-metas mb-3">
+                
+                  <div class="post-meta mr-3">
+                    <i class="iconfont icon-category"></i>
+                    
+                      <a class="hover-with-bg" href="/categories/JVM/">JVM</a>
+                    
+                      <a class="hover-with-bg" href="/categories/JVM/%E4%B8%89%E3%80%81%E8%99%9A%E6%8B%9F%E6%9C%BA%E6%89%A7%E8%A1%8C%E5%AD%90%E7%B3%BB%E7%BB%9F/">三、虚拟机执行子系统</a>
+                    
+                  </div>
+                
+                
+              </div>
+              
+                <p class="note note-warning">本博客所有文章除特别声明外，均采用 <a target="_blank" href="https://creativecommons.org/licenses/by-sa/4.0/deed.zh" rel="nofollow noopener noopener">CC BY-SA 4.0 协议</a> ，转载请注明出处！</p>
+              
+              
+                <div class="post-prevnext row">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2020/10/21/JVM/1.%20JVM%E5%A4%A7%E7%BA%B2/">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">1. JVM大纲</span>
+                        <span class="visible-mobile">Previous</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2020/10/21/JVM/4.%20%E7%B1%BB%E6%96%87%E4%BB%B6%E7%BB%93%E6%9E%84/">
+                        <span class="hidden-mobile">4. 类文件结构</span>
+                        <span class="visible-mobile">Next</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+    
+      <div class="d-none d-lg-block col-lg-2 toc-container" id="toc-ctn">
+        <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;TOC</p>
+  <div id="tocbot"></div>
+</div>
+
+      </div>
+    
+  </div>
+</div>
+
+<!-- Custom -->
+
+
+    
+  </main>
+
+  
+    <a id="scroll-top-button" href="#" role="button">
+      <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+    </a>
+  
+
+  
+    <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">Search</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v"
+                 for="local-search-input">keyword</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+  
+
+  
+
+  
+
+  <footer class="mt-5">
+  <div class="text-center py-3">
+    <div>
+      <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a>
+      <i class="iconfont icon-love"></i>
+      <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener">
+        <span>Fluid</span></a>
+    </div>
+    
+
+    
+
+    
+  </div>
+</footer>
+
+<!-- SCRIPTS -->
+<script  src="https://cdn.staticfile.org/jquery/3.4.1/jquery.min.js" ></script>
+<script  src="https://cdn.staticfile.org/twitter-bootstrap/4.4.1/js/bootstrap.min.js" ></script>
+<script  src="/js/debouncer.js" ></script>
+<script  src="/js/main.js" ></script>
+
+<!-- Plugins -->
+
+
+  
+    <script  src="/js/lazyload.js" ></script>
+  
+
+
+
+  <script defer src="https://cdn.staticfile.org/clipboard.js/2.0.6/clipboard.min.js" ></script>
+  <script  src="/js/clipboard-use.js" ></script>
+
+
+
+
+
+
+
+  <script  src="https://cdn.staticfile.org/tocbot/4.11.1/tocbot.min.js" ></script>
+  <script>
+    $(document).ready(function () {
+      var boardCtn = $('#board-ctn');
+      var boardTop = boardCtn.offset().top;
+
+      tocbot.init({
+        tocSelector: '#tocbot',
+        contentSelector: '#post-body',
+        headingSelector: 'h1,h2,h3,h4,h5,h6',
+        linkClass: 'tocbot-link',
+        activeLinkClass: 'tocbot-active-link',
+        listClass: 'tocbot-list',
+        isCollapsedClass: 'tocbot-is-collapsed',
+        collapsibleClass: 'tocbot-is-collapsible',
+        collapseDepth: 0,
+        scrollSmooth: true,
+        headingsOffset: -boardTop
+      });
+      if ($('.toc-list-item').length > 0) {
+        $('#toc').css('visibility', 'visible');
+      }
+    });
+  </script>
+
+
+
+  <script  src="https://cdn.staticfile.org/typed.js/2.0.11/typed.min.js" ></script>
+  <script>
+    var typed = new Typed('#subtitle', {
+      strings: [
+        '  ',
+        "5. 虚拟机类加载机制&nbsp;",
+      ],
+      cursorChar: "_",
+      typeSpeed: 35,
+      loop: false,
+    });
+    typed.stop();
+    $(document).ready(function () {
+      $(".typed-cursor").addClass("h2");
+      typed.start();
+    });
+  </script>
+
+
+
+  <script  src="https://cdn.staticfile.org/anchor-js/4.2.2/anchor.min.js" ></script>
+  <script>
+    anchors.options = {
+      placement: "right",
+      visible: "hover",
+      
+    };
+    var el = "h1,h2,h3,h4,h5,h6".split(",");
+    var res = [];
+    for (item of el) {
+      res.push(".markdown-body > " + item)
+    }
+    anchors.add(res.join(", "))
+  </script>
+
+
+
+  <script  src="/js/local-search.js" ></script>
+  <script>
+    var path = "/local-search.xml";
+    var inputArea = document.querySelector("#local-search-input");
+    inputArea.onclick = function () {
+      searchFunc(path, 'local-search-input', 'local-search-result');
+      this.onclick = null
+    }
+  </script>
+
+
+
+  <script  src="https://cdn.staticfile.org/fancybox/3.5.7/jquery.fancybox.min.js" ></script>
+  <link  rel="stylesheet" href="https://cdn.staticfile.org/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+  <script>
+    $('#post img:not(.no-zoom img, img[no-zoom]), img[zoom]').each(
+      function () {
+        var element = document.createElement('a');
+        $(element).attr('data-fancybox', 'images');
+        $(element).attr('href', $(this).attr('src'));
+        $(this).wrap(element);
+      }
+    );
+  </script>
+
+
+
+
+
+
+
+  
+  
+    <script>
+      !function (e, t, a) {
+        function r() {
+          for (var e = 0; e < s.length; e++) s[e].alpha <= 0 ? (t.body.removeChild(s[e].el), s.splice(e, 1)) : (s[e].y--, s[e].scale += .004, s[e].alpha -= .013, s[e].el.style.cssText = "left:" + s[e].x + "px;top:" + s[e].y + "px;opacity:" + s[e].alpha + ";transform:scale(" + s[e].scale + "," + s[e].scale + ") rotate(45deg);background:" + s[e].color + ";z-index:99999");
+          requestAnimationFrame(r)
+        }
+
+        function n() {
+          var t = "function" == typeof e.onclick && e.onclick;
+          e.onclick = function (e) {
+            t && t(), o(e)
+          }
+        }
+
+        function o(e) {
+          var a = t.createElement("div");
+          a.className = "heart", s.push({
+            el: a,
+            x: e.clientX - 5,
+            y: e.clientY - 5,
+            scale: 1,
+            alpha: 1,
+            color: c()
+          }), t.body.appendChild(a)
+        }
+
+        function i(e) {
+          var a = t.createElement("style");
+          a.type = "text/css";
+          try {
+            a.appendChild(t.createTextNode(e))
+          } catch (t) {
+            a.styleSheet.cssText = e
+          }
+          t.getElementsByTagName("head")[0].appendChild(a)
+        }
+
+        function c() {
+          return "rgb(" + ~~(255 * Math.random()) + "," + ~~(255 * Math.random()) + "," + ~~(255 * Math.random()) + ")"
+        }
+
+        var s = [];
+        e.requestAnimationFrame = e.requestAnimationFrame || e.webkitRequestAnimationFrame || e.mozRequestAnimationFrame || e.oRequestAnimationFrame || e.msRequestAnimationFrame || function (e) {
+          setTimeout(e, 1e3 / 60)
+        }, i(".heart{width: 10px;height: 10px;position: fixed;background: #f00;transform: rotate(45deg);-webkit-transform: rotate(45deg);-moz-transform: rotate(45deg);}.heart:after,.heart:before{content: '';width: inherit;height: inherit;background: inherit;border-radius: 50%;-webkit-border-radius: 50%;-moz-border-radius: 50%;position: fixed;}.heart:after{top: -5px;}.heart:before{left: -5px;}"), n(), r()
+      }(window, document);
+    </script>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</body>
+</html>
